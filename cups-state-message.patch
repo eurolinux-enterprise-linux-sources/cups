@@ -1,0 +1,45 @@
+diff -up cups-1.6.3/scheduler/job.c.state-message cups-1.6.3/scheduler/job.c
+--- cups-1.6.3/scheduler/job.c.state-message	2017-01-17 13:00:04.298739909 +0100
++++ cups-1.6.3/scheduler/job.c	2017-01-18 16:29:00.347457271 +0100
+@@ -3638,6 +3638,13 @@ finalize_job(cupsd_job_t *job,		/* I - J
+   cupsArrayRemove(PrintingJobs, job);
+ 
+  /*
++  * Clear informational messages...
++  */
++
++  if (job->status_level > CUPSD_LOG_ERROR)
++    job->printer->state_message[0] = '\0';
++
++ /*
+   * Apply any PPD updates...
+   */
+ 
+diff -up cups-1.6.3/xcode/CUPS.xcodeproj/project.pbxproj.state-message cups-1.6.3/xcode/CUPS.xcodeproj/project.pbxproj
+--- cups-1.6.3/xcode/CUPS.xcodeproj/project.pbxproj.state-message	2017-01-17 13:00:40.004504156 +0100
++++ cups-1.6.3/xcode/CUPS.xcodeproj/project.pbxproj	2017-01-18 16:34:02.409677280 +0100
+@@ -2653,7 +2653,7 @@
+ 		72BF96371333042100B1EAD7 /* Project object */ = {
+ 			isa = PBXProject;
+ 			attributes = {
+-				LastUpgradeCheck = 0440;
++				LastUpgradeCheck = 0800;
+ 				ORGANIZATIONNAME = "Apple Inc.";
+ 			};
+ 			buildConfigurationList = 72BF963A1333042100B1EAD7 /* Build configuration list for PBXProject "CUPS" */;
+@@ -3968,6 +3968,7 @@
+ 		72BF963C1333042100B1EAD7 /* Debug */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ASSETCATALOG_COMPRESSION = lossless;
+ 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+ 				DEBUG_INFORMATION_FORMAT = dwarf;
+ 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+@@ -3994,6 +3995,7 @@
+ 		72BF963D1333042100B1EAD7 /* Release */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ASSETCATALOG_COMPRESSION = "respect-asset-catalog";
+ 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+ 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+ 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

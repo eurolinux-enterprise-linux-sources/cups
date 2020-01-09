@@ -11,7 +11,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 1.6.3
-Release: 26%{?dist}
+Release: 29%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Url: http://www.cups.org/
@@ -92,6 +92,8 @@ Patch61: cups-str4648.patch
 Patch62: cups-start-service.patch
 Patch63: cups-163-enotif.patch
 Patch64: cups-163-fdleak.patch
+Patch65: cups-state-message.patch
+Patch66: cups-1.6.3-resolv_reload.patch
 
 Patch100: cups-lspp.patch
 
@@ -355,6 +357,10 @@ Sends IPP requests to the specified URI and tests and/or displays the results.
 %patch63 -p1 -b .enotif
 # Gnome-settings-daemon leaks file descriptors (bug #1297035)
 %patch64 -p1 -b .fdleak
+# Printer State Message not cleared upon successful print job completion (bug #1353096)
+%patch65 -p1 -b .state-message
+# CUPS does not recognize changes to /etc/resolv.conf until CUPS restart (bug #1325692)
+%patch66 -p1 -b .resolv_reload
 
 %if %lspp
 # LSPP support.
@@ -751,6 +757,15 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Thu Apr 06 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-29
+- fixing cups-1.6.3-resolv_reload.patch for rhbz#1325692
+
+* Thu Mar 09 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-28
+- 1325692 - CUPS does not recognize changes to /etc/resolv.conf until CUPS restart
+
+* Wed Jul 20 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-27
+- 1353096 - Printer State Message not cleared upon successful print job completion 
+
 * Wed Jun 15 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-26
 - 1302055 - Change symlink for smb backend to /usr/libexec/samba/cups_backend_smb
 
