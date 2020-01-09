@@ -9,7 +9,7 @@
 Summary: Common Unix Printing System
 Name: cups
 Version: 1.4.2
-Release: 80%{?dist}
+Release: 81%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Source: http://ftp.easysw.com/pub/cups/%{version}/cups-%{version}-source.tar.bz2
@@ -156,6 +156,7 @@ Patch118: cups-orientreq.patch
 Patch119: cups-fittopage.patch
 Patch120: cups-1.4.2-completed-at-novalue.patch
 Patch121: 0001-Fix-stuck-multi-file-jobs-Issue-5359-Issue-5413.patch 
+Patch122: 0001-Ignore-SIGPIPE.patch
 
 ## SECURITY PATCHES:
 Patch150: cups-CVE-2012-5519.patch
@@ -562,6 +563,8 @@ module.
 # Web UI reports "novalue" for "completed at" (bug #1461191)
 %patch120 -p1 -b .completed-at-novalue
 %patch121 -p1 -b .multifile-stuck
+# 1677440 - pstops doesn't clean up after SIGPIPE -- floods /var/spool/cups/tmp with files
+%patch122 -p1 -b .ignore-sigpipe
 
 # SECURITY PATCHES:
 %patch150 -p1 -b .CVE-2012-5519
@@ -889,7 +892,10 @@ rm -rf $RPM_BUILD_ROOT
 %{php_extdir}/phpcups.so
 
 %changelog
-* Thu Nov 08 2018 Zdenek Dohnal <zdohnal@redhat.com>
+* Fri Feb 15 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-81
+- 1677440 - pstops doesn't clean up after SIGPIPE -- floods /var/spool/cups/tmp with files
+
+* Thu Nov 08 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-80
 - 1616443 - Jobs with multiple files don't complete when backend fails
 
 * Fri Dec 08 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-79

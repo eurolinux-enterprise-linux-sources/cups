@@ -1,0 +1,17 @@
+diff --git a/filter/pstops.c b/filter/pstops.c
+index e55f9a79c..feb5fec75 100644
+--- a/filter/pstops.c
++++ b/filter/pstops.c
+@@ -253,6 +253,12 @@ main(int  argc,				/* I - Number of command-line args */
+ 
+   setbuf(stderr, NULL);
+ 
++ /*
++  * Ignore broken pipe signals...
++  */
++
++  signal(SIGPIPE, SIG_IGN);
++
+  /*
+   * Check command-line...
+   */
