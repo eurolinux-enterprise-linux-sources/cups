@@ -1,0 +1,102 @@
+diff -up cups-1.4.2/cups/encode.c.completed-at-novalue cups-1.4.2/cups/encode.c
+--- cups-1.4.2/cups/encode.c.completed-at-novalue	2009-04-20 23:37:14.000000000 +0200
++++ cups-1.4.2/cups/encode.c	2017-06-14 14:17:49.400870108 +0200
+@@ -69,13 +69,23 @@ static const _ipp_option_t ipp_options[]
+   { 0, "hue",			IPP_TAG_INTEGER,	IPP_TAG_JOB },
+   { 0, "hue-default",		IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+   { 1, "include-schemes",	IPP_TAG_NAME,		IPP_TAG_OPERATION },
+-  { 0, "job-impressions",	IPP_TAG_INTEGER,	IPP_TAG_JOB },
++  { 0, "job-hold-until",	IPP_TAG_KEYWORD,	IPP_TAG_JOB },
++  { 0, "job-id",		IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-impressions",	IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-impressions-completed", IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
+   { 0, "job-k-limit",		IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
++  { 0, "job-k-octets",		IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-k-octets-completed",IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-media-sheets",	IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-media-sheets-completed", IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
+   { 0, "job-page-limit",	IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+   { 0, "job-priority",		IPP_TAG_INTEGER,	IPP_TAG_JOB },
+   { 0, "job-quota-period",	IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+   { 1, "job-sheets",		IPP_TAG_NAME,		IPP_TAG_JOB },
+   { 1, "job-sheets-default",	IPP_TAG_NAME,		IPP_TAG_PRINTER },
++  { 0, "job-state",		IPP_TAG_ENUM,		IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-state-message",	IPP_TAG_TEXT,		IPP_TAG_ZERO }, /* never send as option */
++  { 0, "job-state-reasons",	IPP_TAG_KEYWORD,	IPP_TAG_ZERO }, /* never send as option */
+   { 0, "job-uuid",		IPP_TAG_URI,		IPP_TAG_JOB },
+   { 0, "landscape",		IPP_TAG_BOOLEAN,	IPP_TAG_JOB },
+   { 1, "marker-change-time",	IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+@@ -160,6 +170,9 @@ static const _ipp_option_t ipp_options[]
+   { 0, "scaling-default",	IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+   { 0, "sides",			IPP_TAG_KEYWORD,	IPP_TAG_JOB },
+   { 0, "sides-default",		IPP_TAG_KEYWORD,	IPP_TAG_PRINTER },
++  { 0, "time-at-completed",	IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "time-at-creation",	IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "time-at-processing",	IPP_TAG_INTEGER,	IPP_TAG_ZERO }, /* never send as option */
+   { 0, "wrap",			IPP_TAG_BOOLEAN,	IPP_TAG_JOB },
+   { 0, "wrap-default",		IPP_TAG_BOOLEAN,	IPP_TAG_PRINTER },
+   { 0, "x-dimension",		IPP_TAG_INTEGER,	IPP_TAG_JOB },
+diff -up cups-1.4.2/scheduler/ipp.c.completed-at-novalue cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.completed-at-novalue	2017-06-14 14:17:49.369870386 +0200
++++ cups-1.4.2/scheduler/ipp.c	2017-06-14 14:23:12.190980153 +0200
+@@ -1335,6 +1335,22 @@ add_job(cupsd_client_t  *con,		/* I - Cl
+ 		  filetype, filetype ? filetype->super : "none",
+ 		  filetype ? filetype->type : "none");
+ 
++  static const char * const readonly[] =/* List of read-only attributes */
++  {
++    "job-id",
++    "job-k-octets",
++    /*"job-impressions",*/		/* For now we allow this since cupsd can't count */
++    "job-impressions-completed",
++    "job-media-sheets",
++    "job-media-sheets-completed",
++    "job-state",
++    "job-state-message",
++    "job-state-reasons",
++    "time-at-completed",
++    "time-at-creation",
++    "time-at-processing"
++  };
++
+  /*
+   * Check remote printing to non-shared printer...
+   */
+@@ -1396,6 +1412,19 @@ add_job(cupsd_client_t  *con,		/* I - Cl
+   * copies, number-up, and page-ranges...
+   */
+ 
++  for (i = 0; i < (int)(sizeof(readonly) / sizeof(readonly[0])); i ++)
++  {
++    if ((attr = ippFindAttribute(con->request, readonly[i],
++                                 IPP_TAG_ZERO)) != NULL)
++    {
++      ippDeleteAttribute(con->request, attr);
++
++      cupsdLogMessage(CUPSD_LOG_WARN,
++                      "Unexpected '%s' Job Description attribute in a job "
++                      "creation request.", readonly[i]);
++    }
++  }
++
+   if (filetype && printer->filetypes &&
+       !cupsArrayFind(printer->filetypes, filetype))
+   {
+diff -up cups-1.4.2/scheduler/job.c.completed-at-novalue cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.completed-at-novalue	2017-06-14 14:17:49.394870162 +0200
++++ cups-1.4.2/scheduler/job.c	2017-06-14 14:17:49.402870091 +0200
+@@ -3183,7 +3183,13 @@ get_options(cupsd_job_t *job,		/* I - Jo
+ 	  attr->value_tag == IPP_TAG_BEGIN_COLLECTION) /* Not yet supported */
+ 	continue;
+ 
+-      if (!strcmp(attr->name, "job-hold-until"))
++      if (!strcmp(attr->name, "job-hold-until") ||
++          !strcmp(attr->name, "job-id") ||
++          !strcmp(attr->name, "job-k-octets") ||
++          !strcmp(attr->name, "job-media-sheets") ||
++          !strcmp(attr->name, "job-media-sheets-completed") ||
++          !strcmp(attr->name, "job-state") ||
++          !strcmp(attr->name, "job-state-reasons"))
+ 	continue;
+ 
+       if (!strncmp(attr->name, "job-", 4) &&

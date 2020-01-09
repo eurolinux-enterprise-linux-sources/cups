@@ -9,7 +9,7 @@
 Summary: Common Unix Printing System
 Name: cups
 Version: 1.4.2
-Release: 78%{?dist}
+Release: 79%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Source: http://ftp.easysw.com/pub/cups/%{version}/cups-%{version}-source.tar.bz2
@@ -154,6 +154,7 @@ Patch116: cups-banner-notime.patch
 Patch117: cups-implicit-class.patch
 Patch118: cups-orientreq.patch
 Patch119: cups-fittopage.patch
+Patch120: cups-1.4.2-completed-at-novalue.patch
 
 ## SECURITY PATCHES:
 Patch150: cups-CVE-2012-5519.patch
@@ -557,6 +558,8 @@ module.
 %patch118 -p1 -b .orientreq
 # Printing PDF with fit-to-page doesn't take printer HW margins into account (bug #1268131) 
 %patch119 -p1 -b .fittopage
+# Web UI reports "novalue" for "completed at" (bug #1461191)
+%patch120 -p1 -b .completed-at-novalue
 
 # SECURITY PATCHES:
 %patch150 -p1 -b .CVE-2012-5519
@@ -884,6 +887,9 @@ rm -rf $RPM_BUILD_ROOT
 %{php_extdir}/phpcups.so
 
 %changelog
+* Fri Dec 08 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-79
+- 1461191 - Web UI reports "novalue" for "completed at"
+
 * Thu Apr 27 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-78
 - 1442206 - Errors when issuing lp* commands
 
@@ -1051,7 +1057,7 @@ rm -rf $RPM_BUILD_ROOT
 - The scheduler might leave old job data files in the spool directory
   (STR #3795, STR #3880, bug #735505).
 
-* Mon Aug 28 2011 Tim Waugh <twaugh@redhat.com> 1:1.4.2-42
+* Mon Aug 29 2011 Tim Waugh <twaugh@redhat.com> 1:1.4.2-42
 - A further fix for imageto* filters crashing with bad GIF files
   (STR #3914, bug #714118).
 
