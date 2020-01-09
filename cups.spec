@@ -9,7 +9,7 @@
 Summary: Common Unix Printing System
 Name: cups
 Version: 1.4.2
-Release: 77%{?dist}
+Release: 78%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Source: http://ftp.easysw.com/pub/cups/%{version}/cups-%{version}-source.tar.bz2
@@ -547,7 +547,7 @@ module.
 %patch113 -p1 -b .str4742
 # Reset job's kill_time in finalize_job() (bug #1293498).
 %patch114 -p1 -b .kill-time
-# IPP enters infinite loop consuming CPU (bug #1324158)
+# IPP enters infinite loop consuming CPU (bug #1324158), Errors when issuing lp* commands (bug #1442206)
 %patch115 -p1 -b .ipp-consume-cpu
 # Banner pages do not show time-at-creation or time-at-processing (bug #1344782)
 %patch116 -p1 -b .banner-notime
@@ -884,6 +884,9 @@ rm -rf $RPM_BUILD_ROOT
 %{php_extdir}/phpcups.so
 
 %changelog
+* Thu Apr 27 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-78
+- 1442206 - Errors when issuing lp* commands
+
 * Tue Nov 01 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-77
 - 1099617 - Using "lp -o orientation-requested=6" with a PDF file has no effect.
 - 1268131 - Printing PDF with fit-to-page doesn't take printer HW margins into account 

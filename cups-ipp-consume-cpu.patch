@@ -1,7 +1,12 @@
 diff -up cups-1.4.2/cups/request.c.ipp-consume-cpu cups-1.4.2/cups/request.c
---- cups-1.4.2/cups/request.c.ipp-consume-cpu	2016-09-22 16:53:14.885803305 +0200
-+++ cups-1.4.2/cups/request.c	2016-09-22 16:56:07.609543749 +0200
-@@ -266,11 +266,11 @@ cupsDoIORequest(http_t     *http,	/* I -
+--- cups-1.4.2/cups/request.c.ipp-consume-cpu	2017-04-27 11:26:53.276820631 +0200
++++ cups-1.4.2/cups/request.c	2017-04-27 11:29:19.677661720 +0200
+@@ -263,14 +263,16 @@ cupsDoIORequest(http_t     *http,	/* I -
+       response = cupsGetResponse(http, resource);
+       status   = http->status;
+     }
++    else
++      httpFlush(http);
  
      DEBUG_printf(("2cupsDoIORequest: status=%d", status));
  
