@@ -1,0 +1,10 @@
+--- cups-1.6.3/cups/usersys.c
++++ cups-1.6.3/cups/usersys.c
+@@ -846,6 +846,7 @@ _cupsSetDefaults(void)
+ #endif /* HAVE_GSSAPI */
+ 			  cups_anyroot, cups_expiredroot,
+ 			  cups_expiredcerts, 1);
++    cupsFileClose(fp);
+ 
+    /*
+     * Then user defaults, if it is safe to do so...

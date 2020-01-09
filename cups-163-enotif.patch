@@ -1,0 +1,14 @@
+diff -up cups-1.6.3/scheduler/subscriptions.c.enotif cups-1.6.3/scheduler/subscriptions.c
+--- cups-1.6.3/scheduler/subscriptions.c.enotif	2016-04-20 08:23:22.000000000 +0200
++++ cups-1.6.3/scheduler/subscriptions.c	2016-04-22 10:35:07.363139391 +0200
+@@ -126,9 +126,7 @@ cupsdAddEvent(
+     * Check if this subscription requires this event...
+     */
+ 
+-    if ((sub->mask & event) != 0 &&
+-        (sub->dest == dest || !sub->dest) &&
+-	(sub->job == job || !sub->job))
++	if ((sub->mask & event) != 0 && (sub->dest == dest || !sub->dest || sub->job == job))
+     {
+      /*
+       * Need this event, so create a new event record...

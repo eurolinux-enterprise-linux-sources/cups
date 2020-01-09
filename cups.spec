@@ -11,7 +11,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 1.6.3
-Release: 22%{?dist}
+Release: 26%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Url: http://www.cups.org/
@@ -90,6 +90,8 @@ Patch59: cups-str4591.patch
 Patch60: cups-str4646.patch
 Patch61: cups-str4648.patch
 Patch62: cups-start-service.patch
+Patch63: cups-163-enotif.patch
+Patch64: cups-163-fdleak.patch
 
 Patch100: cups-lspp.patch
 
@@ -349,6 +351,10 @@ Sends IPP requests to the specified URI and tests and/or displays the results.
 %patch61 -p1 -b .str4648
 # Start cups.service in multi-user target by default (bug #1236184).
 %patch62 -p1 -b .start-service
+# Email notifications ("lp -m") for printer classes don't work (bug #1257751)
+%patch63 -p1 -b .enotif
+# Gnome-settings-daemon leaks file descriptors (bug #1297035)
+%patch64 -p1 -b .fdleak
 
 %if %lspp
 # LSPP support.
@@ -579,12 +585,6 @@ exit 0
 %systemd_postun_with_restart cups-lpd.socket
 exit 0
 
-%triggerun -- %{name} < 1:1.5.0-22
-# This package is allowed to autostart; however, the upgrade trigger
-# in Fedora 16 final failed to actually do this.  Do it now as a
-# one-off fix for bug #748841.
-/bin/systemctl --no-reload enable %{name}.{service,socket,path} >/dev/null 2>&1 || :
-
 %triggerun -- %{name} < 1:1.5-0.9
 # Save the current service runlevel info
 # User must manually run systemd-sysv-convert --apply cups
@@ -599,18 +599,10 @@ exit 0
 /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
 
 %triggerin -- samba-client
-ln -sf ../../../bin/smbspool %{cups_serverbin}/backend/smb || :
+ln -sf %{_libexecdir}/samba/cups_backend_smb %{cups_serverbin}/backend/smb || :
 exit 0
 
 %triggerun -- samba-client
-[ $2 = 0 ] || exit 0
-rm -f %{cups_serverbin}/backend/smb
-
-%triggerin -- samba4-client
-ln -sf %{_bindir}/smbspool %{cups_serverbin}/backend/smb || :
-exit 0
-
-%triggerun -- samba4-client
 [ $2 = 0 ] || exit 0
 rm -f %{cups_serverbin}/backend/smb
 
@@ -628,7 +620,7 @@ rm -f %{cups_serverbin}/backend/smb
 %verify(not md5 size mtime) %config(noreplace) %attr(0600,root,lp) %{_sysconfdir}/cups/classes.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0600,root,lp) %{_sysconfdir}/cups/printers.conf
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/snmp.conf
-%verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/subscriptions.conf
+%verify(not md5 size mtime) %config(noreplace) %attr(0640,root,lp) %{_sysconfdir}/cups/subscriptions.conf
 %{_sysconfdir}/cups/interfaces
 %verify(not md5 size mtime) %config(noreplace) %attr(0644,root,lp) %{_sysconfdir}/cups/lpoptions
 %dir %attr(0755,root,lp) %{_sysconfdir}/cups/ppd
@@ -759,6 +751,21 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Wed Jun 15 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-26
+- 1302055 - Change symlink for smb backend to /usr/libexec/samba/cups_backend_smb
+
+* Wed Apr 27 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-25
+- 1297035 - gnome-settings-daemon leaks file descriptors
+- 1257751 - Email notifications ("lp -m") for printer classes don't work
+
+* Tue Apr 19 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-24
+- Fixing once more 1257051, 1259770
+
+* Tue Apr 19 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-23
+- 1257051 - cups-lpd man page incomplete
+- 1275790 - spec file includes triggers with overlapping version intervals
+- 1259770 - permission changed after writing to /etc/cups/subscriptions.conf 
+
 * Tue Jul 21 2015 Tim Waugh <twaugh@redhat.com> - 1:1.6.3-22
 - Start cups.service in multi-user target by default (bug #1236184),
   not just cups.socket.
