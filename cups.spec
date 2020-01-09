@@ -9,7 +9,7 @@
 Summary: Common Unix Printing System
 Name: cups
 Version: 1.4.2
-Release: 79%{?dist}
+Release: 80%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Source: http://ftp.easysw.com/pub/cups/%{version}/cups-%{version}-source.tar.bz2
@@ -155,6 +155,7 @@ Patch117: cups-implicit-class.patch
 Patch118: cups-orientreq.patch
 Patch119: cups-fittopage.patch
 Patch120: cups-1.4.2-completed-at-novalue.patch
+Patch121: 0001-Fix-stuck-multi-file-jobs-Issue-5359-Issue-5413.patch 
 
 ## SECURITY PATCHES:
 Patch150: cups-CVE-2012-5519.patch
@@ -560,6 +561,7 @@ module.
 %patch119 -p1 -b .fittopage
 # Web UI reports "novalue" for "completed at" (bug #1461191)
 %patch120 -p1 -b .completed-at-novalue
+%patch121 -p1 -b .multifile-stuck
 
 # SECURITY PATCHES:
 %patch150 -p1 -b .CVE-2012-5519
@@ -887,6 +889,9 @@ rm -rf $RPM_BUILD_ROOT
 %{php_extdir}/phpcups.so
 
 %changelog
+* Thu Nov 08 2018 Zdenek Dohnal <zdohnal@redhat.com>
+- 1616443 - Jobs with multiple files don't complete when backend fails
+
 * Fri Dec 08 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.4.2-79
 - 1461191 - Web UI reports "novalue" for "completed at"
 
