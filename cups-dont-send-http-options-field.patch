@@ -1,0 +1,12 @@
+diff --git a/scheduler/client.c b/scheduler/client.c
+index 7e77017..7c87cbe 100644
+--- a/scheduler/client.c
++++ b/scheduler/client.c
+@@ -1228,7 +1228,6 @@ cupsdReadClient(cupsd_client_t *con)	/* I - Client to read from */
+ 	return;
+       }
+ 
+-      httpPrintf(HTTP(con), "Allow: GET, HEAD, OPTIONS, POST, PUT\r\n");
+       httpPrintf(HTTP(con), "Content-Length: 0\r\n");
+       httpPrintf(HTTP(con), "\r\n");
+ 

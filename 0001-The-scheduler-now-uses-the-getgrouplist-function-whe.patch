@@ -1,0 +1,111 @@
+diff -up cups-1.6.3/config.h.in.getgrouplist cups-1.6.3/config.h.in
+--- cups-1.6.3/config.h.in.getgrouplist	2019-02-06 17:51:23.338680247 +0100
++++ cups-1.6.3/config.h.in	2019-02-06 17:51:23.388679840 +0100
+@@ -550,6 +550,13 @@
+ 
+ 
+ /*
++ * Do we have the getgrouplist() function?
++ */
++
++#undef HAVE_GETGROUPLIST
++ 
++
++/*
+  * Do we have OS X 10.4's mbr_XXX functions?
+  */
+ 
+diff -up cups-1.6.3/config-scripts/cups-common.m4.getgrouplist cups-1.6.3/config-scripts/cups-common.m4
+--- cups-1.6.3/config-scripts/cups-common.m4.getgrouplist	2019-02-06 17:51:23.387679848 +0100
++++ cups-1.6.3/config-scripts/cups-common.m4	2019-02-06 17:52:42.256037532 +0100
+@@ -202,6 +202,9 @@ AC_CHECK_FUNCS(sigaction)
+ dnl Checks for wait functions.
+ AC_CHECK_FUNCS(waitpid wait3)
+ 
++dnl Check for getgrouplist
++AC_CHECK_FUNCS(getgrouplist)
++
+ dnl See if the tm structure has the tm_gmtoff member...
+ AC_MSG_CHECKING(for tm_gmtoff member in tm structure)
+ AC_TRY_COMPILE([#include <time.h>],[struct tm t;
+diff -up cups-1.6.3/configure.getgrouplist cups-1.6.3/configure
+--- cups-1.6.3/configure.getgrouplist	2013-07-11 23:13:11.000000000 +0200
++++ cups-1.6.3/configure	2019-02-06 17:51:23.391679815 +0100
+@@ -5155,6 +5155,18 @@ fi
+ done
+ 
+ 
++for ac_func in getgrouplist
++do :
++  ac_fn_c_check_func "$LINENO" "getgrouplist" "ac_cv_func_getgrouplist"
++if test "x$ac_cv_func_getgrouplist" = xyes; then :
++  cat >>confdefs.h <<_ACEOF
++#define HAVE_GETGROUPLIST 1
++_ACEOF
++
++fi
++done
++
++
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for tm_gmtoff member in tm structure" >&5
+ $as_echo_n "checking for tm_gmtoff member in tm structure... " >&6; }
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+diff -up cups-1.6.3/scheduler/auth.c.getgrouplist cups-1.6.3/scheduler/auth.c
+--- cups-1.6.3/scheduler/auth.c.getgrouplist	2019-02-06 17:51:23.003682975 +0100
++++ cups-1.6.3/scheduler/auth.c	2019-02-06 17:51:23.391679815 +0100
+@@ -1489,6 +1489,21 @@ cupsdCheckGroup(
+     * Group exists, check it...
+     */
+ 
++#ifdef HAVE_GETGROUPLIST
++    if (user)
++    {
++      int	ngroups;		/* Number of groups */
++      gid_t	groups[2048];		/* Groups that user belongs to */
++
++      ngroups = (int)(sizeof(groups) / sizeof(groups[0]));
++      getgrouplist(username, user->pw_gid, groups, &ngroups);
++
++      for (i = 0; i < ngroups; i ++)
++        if (group->gr_gid == groups[i])
++	  return (1);
++    }
++#endif /* HAVE_GETGROUPLIST */
++
+     for (i = 0; group->gr_mem[i]; i ++)
+       if (!_cups_strcasecmp(username, group->gr_mem[i]))
+ 	return (1);
+diff -up cups-1.6.3/vcnet/config.h.getgrouplist cups-1.6.3/vcnet/config.h
+--- cups-1.6.3/vcnet/config.h.getgrouplist	2013-06-07 03:12:52.000000000 +0200
++++ cups-1.6.3/vcnet/config.h	2019-02-06 17:51:23.392679807 +0100
+@@ -599,6 +599,13 @@
+ 
+ 
+ /*
++ * Do we have the getgrouplist() function?
++ */
++
++#undef HAVE_GETGROUPLIST
++
++
++/*
+  * Do we have OS X 10.4's mbr_XXX functions?
+  */
+ 
+diff -up cups-1.6.3/xcode/config.h.getgrouplist cups-1.6.3/xcode/config.h
+--- cups-1.6.3/xcode/config.h.getgrouplist	2019-02-06 17:51:23.392679807 +0100
++++ cups-1.6.3/xcode/config.h	2019-02-06 17:53:54.616448200 +0100
+@@ -536,6 +536,13 @@
+ 
+ 
+ /*
++ * Do we have the getgrouplist() function?
++ */
++
++#define HAVE_GETGROUPLIST 1
++ 
++
++/*
+  * Do we have OS X 10.4's mbr_XXX functions?
+  */
+ 
