@@ -1,0 +1,56 @@
+diff -up cups-1.6.3/scheduler/conf.c.str4591 cups-1.6.3/scheduler/conf.c
+--- cups-1.6.3/scheduler/conf.c.str4591	2015-06-23 14:05:39.874805401 +0100
++++ cups-1.6.3/scheduler/conf.c	2015-06-23 14:10:38.364395201 +0100
+@@ -1245,6 +1245,19 @@ cupsdReadConfiguration(void)
+ 
+   cupsdUpdateEnv();
+ 
++  /*
++   * Validate the default error policy...
++   */
++
++  if (strcmp(ErrorPolicy, "retry-current-job") &&
++      strcmp(ErrorPolicy, "abort-job") &&
++      strcmp(ErrorPolicy, "retry-job") &&
++      strcmp(ErrorPolicy, "stop-printer"))
++  {
++    cupsdLogMessage(CUPSD_LOG_ALERT, "Invalid ErrorPolicy \"%s\", resetting to \"stop-printer\".", ErrorPolicy);
++    cupsdSetString(&ErrorPolicy, "stop-printer");
++  }
++
+  /*
+   * Update default paper size setting as needed...
+   */
+diff -up cups-1.6.3/scheduler/printers.c.str4591 cups-1.6.3/scheduler/printers.c
+--- cups-1.6.3/scheduler/printers.c.str4591	2015-06-23 14:04:45.301229731 +0100
++++ cups-1.6.3/scheduler/printers.c	2015-06-23 14:10:52.717276314 +0100
+@@ -3,7 +3,7 @@
+  *
+  *   Printer routines for the CUPS scheduler.
+  *
+- *   Copyright 2007-2012 by Apple Inc.
++ *   Copyright 2007-2015 by Apple Inc.
+  *   Copyright 1997-2007 by Easy Software Products, all rights reserved.
+  *
+  *   These coded instructions, statements, and computer programs are the
+@@ -1303,10 +1303,17 @@ cupsdLoadAllPrinters(void)
+     else if (!_cups_strcasecmp(line, "ErrorPolicy"))
+     {
+       if (value)
+-        cupsdSetString(&p->error_policy, value);
++      {
++	if (strcmp(value, "retry-current-job") &&
++	    strcmp(value, "abort-job") &&
++	    strcmp(value, "retry-job") &&
++	    strcmp(value, "stop-printer"))
++	  cupsdLogMessage(CUPSD_LOG_ALERT, "Invalid ErrorPolicy \"%s\" on line %d or printers.conf.", ErrorPolicy, linenum);
++	else
++	  cupsdSetString(&p->error_policy, value);
++      }
+       else
+-	cupsdLogMessage(CUPSD_LOG_ERROR,
+-	                "Syntax error on line %d of printers.conf.", linenum);
++	cupsdLogMessage(CUPSD_LOG_ERROR, "Syntax error on line %d of printers.conf.", linenum);
+     }
+     else if (!_cups_strcasecmp(line, "Attribute") && value)
+     {

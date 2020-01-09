@@ -1,0 +1,31 @@
+diff -up cups-1.6.3/man/cupsd.conf.man.in.error-policy-manpage cups-1.6.3/man/cupsd.conf.man.in
+--- cups-1.6.3/man/cupsd.conf.man.in.error-policy-manpage	2014-09-02 11:23:05.798957567 +0100
++++ cups-1.6.3/man/cupsd.conf.man.in	2014-09-02 11:24:35.813428214 +0100
+@@ -3,7 +3,7 @@
+ .\"
+ .\"   cupsd.conf man page for CUPS.
+ .\"
+-.\"   Copyright 2007-2013 by Apple Inc.
++.\"   Copyright 2007-2014 by Apple Inc.
+ .\"   Copyright 1997-2006 by Easy Software Products.
+ .\"
+ .\"   These coded instructions, statements, and computer programs are the
+@@ -180,6 +180,18 @@ Encryption Required
+ Specifies the level of encryption that is required for a particular
+ location.
+ .TP 5
++ErrorPolicy abort-job
++Specifies that a failed print job should be aborted (discarded) unless otherwise specified for the printer.
++.TP 5
++ErrorPolicy retry-job
++Specifies that a failed print job should be retried at a later time unless otherwise specified for the printer.
++.TP 5
++ErrorPolicy retry-this-job
++Specifies that a failed print job should be retried immediately unless otherwise specified for the printer.
++.TP 5
++ErrorPolicy stop-printer
++Specifies that a failed print job should stop the printer unless otherwise specified for the printer. The 'stop-printer' error policy is the default.
++.TP 5
+ FilterLimit limit
+ .br
+ Specifies the maximum cost of filters that are run concurrently.

@@ -1,0 +1,9 @@
+diff -up cups-1.6.3/data/cups.service.in.start-service cups-1.6.3/data/cups.service.in
+--- cups-1.6.3/data/cups.service.in.start-service	2015-07-21 16:14:18.837479112 +0100
++++ cups-1.6.3/data/cups.service.in	2015-07-21 16:14:42.965396925 +0100
+@@ -8,4 +8,4 @@ PrivateTmp=true
+ 
+ [Install]
+ Also=cups.socket cups.path
+-WantedBy=printer.target
++WantedBy=multi-user.target printer.target

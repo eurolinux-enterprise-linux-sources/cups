@@ -1,0 +1,61 @@
+diff -up cups-1.6.3/scheduler/ipp.c.str4648 cups-1.6.3/scheduler/ipp.c
+--- cups-1.6.3/scheduler/ipp.c.str4648	2015-07-08 10:24:31.389942557 +0100
++++ cups-1.6.3/scheduler/ipp.c	2015-07-08 10:24:51.042104284 +0100
+@@ -3392,6 +3392,8 @@ cancel_all_jobs(cupsd_client_t  *con,	/*
+   }
+ 
+   con->response->request.status.status_code = IPP_OK;
++
++  cupsdCheckJobs();
+ }
+ 
+ 
+diff -up cups-1.6.3/scheduler/job.c.str4648 cups-1.6.3/scheduler/job.c
+--- cups-1.6.3/scheduler/job.c.str4648	2015-07-08 10:24:31.399942636 +0100
++++ cups-1.6.3/scheduler/job.c	2015-07-08 10:24:51.043104293 +0100
+@@ -267,8 +267,6 @@ cupsdCancelJobs(const char *dest,	/* I -
+ 			 "Job canceled by user.");
+     }
+   }
+-
+-  cupsdCheckJobs();
+ }
+ 
+ 
+@@ -3488,13 +3486,6 @@ finalize_job(cupsd_job_t *job,		/* I - J
+ 
+   job->printer->job = NULL;
+   job->printer      = NULL;
+-
+- /*
+-  * Try printing another job...
+-  */
+-
+-  if (printer_state != IPP_PRINTER_STOPPED)
+-    cupsdCheckJobs();
+ }
+ 
+ 
+@@ -4744,6 +4735,8 @@ update_job(cupsd_job_t *job)		/* I - Job
+ 		*ptr;			/* Pointer update... */
+   int		loglevel,		/* Log level for message */
+ 		event = 0;		/* Events? */
++  cupsd_printer_t *printer = job->printer;
++					/* Printer */
+   static const char * const levels[] =	/* Log levels */
+ 		{
+ 		  "NONE",
+@@ -5063,10 +5056,11 @@ update_job(cupsd_job_t *job)		/* I - Job
+     finalize_job(job, 1);
+ 
+    /*
+-    * Check for new jobs...
++    * Try printing another job...
+     */
+ 
+-    cupsdCheckJobs();
++    if (printer->state != IPP_PRINTER_STOPPED)
++      cupsdCheckJobs();
+   }
+ }
+ 

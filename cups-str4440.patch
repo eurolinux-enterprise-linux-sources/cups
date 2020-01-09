@@ -1,0 +1,13 @@
+diff -up cups-1.6.3/scheduler/client.c.str4440 cups-1.6.3/scheduler/client.c
+--- cups-1.6.3/scheduler/client.c.str4440	2014-09-02 11:02:03.363550036 +0100
++++ cups-1.6.3/scheduler/client.c	2014-09-02 11:02:34.114702446 +0100
+@@ -2075,6 +2075,9 @@ cupsdReadClient(cupsd_client_t *con)	/*
+ 	    * Grab any request data from the connection...
+ 	    */
+ 
++	    if (!httpWait(HTTP(con), 0))
++	      return;
++
+ 	    if ((ipp_state = ippRead(&(con->http), con->request)) == IPP_ERROR)
+ 	    {
+               cupsdLogMessage(CUPSD_LOG_ERROR,

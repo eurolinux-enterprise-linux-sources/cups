@@ -1,0 +1,20 @@
+diff -up cups-1.6.3/cups/dest.c.str4380 cups-1.6.3/cups/dest.c
+--- cups-1.6.3/cups/dest.c.str4380	2014-09-02 10:44:24.753303299 +0100
++++ cups-1.6.3/cups/dest.c	2014-09-02 10:44:24.785303458 +0100
+@@ -951,11 +951,11 @@ cupsEnumDests(
+   * Get Bonjour-shared printers...
+   */
+ 
+-  data.type    = type;
+-  data.mask    = mask;
+-  data.devices = cupsArrayNew3((cups_array_func_t)cups_dnssd_compare_devices,
+-                               NULL, NULL, 0, NULL,
+-                               (cups_afree_func_t)cups_dnssd_free_device);
++  data.type      = type;
++  data.mask      = mask;
++  data.cb        = cb;
++  data.user_data = user_data;
++  data.devices   = cupsArrayNew3((cups_array_func_t)cups_dnssd_compare_devices, NULL, NULL, 0, NULL, (cups_afree_func_t)cups_dnssd_free_device);
+ 
+ #  ifdef HAVE_DNSSD
+   if (DNSServiceCreateConnection(&data.main_ref) != kDNSServiceErr_NoError)

@@ -1,0 +1,23 @@
+diff -up cups-1.6.3/scheduler/colorman.c.colord-interface cups-1.6.3/scheduler/colorman.c
+--- cups-1.6.3/scheduler/colorman.c.colord-interface	2013-06-07 02:12:52.000000000 +0100
++++ cups-1.6.3/scheduler/colorman.c	2014-09-02 10:47:19.457169176 +0100
+@@ -107,6 +107,10 @@ extern CFUUIDRef ColorSyncCreateUUIDFrom
+ 					"org.freedesktop.ColorManager", (p),\
+                                         "org.freedesktop.ColorManager", (m))
+                                         /* Macro to make new colord messages */
++#  define COLORD_DEVICE_DBUS_MSG(p,m)	dbus_message_new_method_call(	\
++					"org.freedesktop.ColorManager", (p),\
++                                        "org.freedesktop.ColorManager.Device", (m))
++                                        /* Macro to make new colord messages */
+ #  define COLORD_DBUS_PATH	"/org/freedesktop/ColorManager"
+ 					/* Path for color management system */
+ #  define COLORD_DBUS_TIMEOUT	5000	/* Timeout for connecting to colord in ms */
+@@ -1196,7 +1200,7 @@ colord_device_add_profile(
+   DBusError	error;			/* D-Bus error */
+ 
+ 
+-  message = COLORD_DBUS_MSG(device_path, "AddProfile");
++  message = COLORD_DEVICE_DBUS_MSG(device_path, "AddProfile");
+ 
+   dbus_message_iter_init_append(message, &args);
+   dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &relation);
