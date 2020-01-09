@@ -1,7 +1,7 @@
 diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failover.c
---- cups-1.6.3/backend/failover.c.failover-backend	2014-10-21 16:58:34.588301166 +0100
-+++ cups-1.6.3/backend/failover.c	2014-10-21 16:58:34.588301166 +0100
-@@ -0,0 +1,799 @@
+--- cups-1.6.3/backend/failover.c.failover-backend	2017-10-25 13:57:43.032337219 +0200
++++ cups-1.6.3/backend/failover.c	2017-10-25 16:15:31.746984025 +0200
+@@ -0,0 +1,837 @@
 +/*
 + * Failover Backend for the Common UNIX Printing System (CUPS).
 + *
@@ -67,6 +67,17 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +#include <cups/http-private.h>
 +#include <cups/http.h>
 +#include "backend-private.h"
++
++/*
++ * Return Values
++ */
++typedef enum fo_state_e
++{
++  FO_PRINTER_GOOD = 0,
++  FO_PRINTER_BAD,
++  FO_PRINTER_BUSY,
++  FO_AUTH_REQUIRED
++} fo_state_t;
 +
 +/*
 + * Constants
@@ -212,27 +223,43 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +      
 +      fprintf(stderr,"DEBUG: Checking printer #%d: %s\n",
 +	      printer_count+1, tmp_device_uri);
-+      
-+      if ((rc = check_printer(tmp_device_uri)) == CUPS_BACKEND_OK)
++
++      rc = check_printer(tmp_device_uri);
++
++      // Printer is available and not busy.
++      if ( rc == FO_PRINTER_GOOD )      
 +      {
 +	selected_uri = tmp_device_uri;
 +	break;
 +      }
-+      else if (rc == CUPS_BACKEND_AUTH_REQUIRED) {
-+	auth_failed_count++;
-+	fprintf(stderr, "DEBUG:  auth_failed_count = %d\n", auth_failed_count);
++      // Printer is busy
++      else if ( rc == FO_PRINTER_BUSY )
++      {
++        fprintf(stderr, "DEBUG: Waiting for job to complete.\n");
++        sleep(2);
++        continue;
 +      }
-+      else if (!printer_count) 
-+	fprintf(stderr, "INFO: Primary Printer, %s, not available.  "
-+		"Attempting Failovers...\n",
-+		tmp_device_uri);
++      // Authorization is required to access the printer.
++      else if (rc == FO_AUTH_REQUIRED)
++      {
++	auth_failed_count++;
++	fprintf(stderr, "DEBUG: auth_failed_count = %d\n", auth_failed_count);
++      }
++      // Printer is stopped or not accepting jobs
 +      else
-+	fprintf(stderr, "INFO: Failover Printer, %s, not available.  "
-+		"Attempting Failovers..\n",
-+		tmp_device_uri);
-+      
-+      printer_count++;
-+    } while ((tmp_device_uri = (char *)cupsArrayNext(printer_array)) != NULL);
++      {
++        if (!printer_count) 
++          fprintf(stderr, "INFO: Primary Printer, %s, not available.  "
++                  "Attempting Failovers...\n",
++                  tmp_device_uri);
++        else
++          fprintf(stderr, "INFO: Failover Printer, %s, not available.  "
++                  "Attempting Failovers..\n",
++                  tmp_device_uri);
++        printer_count++;
++        tmp_device_uri = (char *)cupsArrayNext(printer_array);
++      }
++    } while (tmp_device_uri != NULL);
 +
 +    if (selected_uri && !printer_count)
 +      fprintf(stderr, "STATE: -primary-printer-failed\n");
@@ -295,25 +322,28 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +
 +/*
 + * 'check_printer()' - Checks the status of a remote printer and returns
-+ *                     back BACKEND_FAILURE if the remote printer is
-+ *                     unable to take the job.
++ *                     back a good/bad/busy status.
 + */
 +int
 +check_printer(const char *device_uri)
 +{
 +  ipp_t           *attributes = NULL;     /* attributes for device_uri */
 +  ipp_attribute_t *tmp_attribute;         /* for examining attribs     */
-+  int              rc = CUPS_BACKEND_OK;  /* return code               */
++  int              rc = FO_PRINTER_GOOD;  /* return code               */
 +  char            *reason;                /* printer state reason */
 +  int              i;
 +
 +  fprintf(stderr, "DEBUG: Checking printer %s\n",device_uri);
-+
-+  if ((rc = get_printer_attributes(device_uri, &attributes)) != CUPS_BACKEND_OK)
++  
++  rc = get_printer_attributes(device_uri, &attributes);
++  if ( rc != CUPS_BACKEND_OK )
 +  {
 +    fprintf(stderr, "DEBUG: Failed to get attributes from printer: %s\n",
 +	    device_uri);
-+    return (rc);
++    if ( rc == CUPS_BACKEND_AUTH_REQUIRED )
++      return (FO_AUTH_REQUIRED);
++    else
++      return (FO_PRINTER_BAD);
 +  }
 +
 + /*
@@ -328,20 +358,28 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +	    "DEBUG: Printer, %s, is not accepting jobs.\n",
 +	    device_uri);
 +     
-+    rc = CUPS_BACKEND_FAILED;
++    rc = FO_PRINTER_BAD;
 +  }
 +
 + /*
-+  * Check if printer is stopped
++  * Check if printer is stopped or busy processing
 +  */
 +  if ((tmp_attribute = ippFindAttribute(attributes,
 +					"printer-state",
-+					IPP_TAG_ENUM)) != NULL &&
-+      tmp_attribute->values[0].integer == IPP_PRINTER_STOPPED)
++					IPP_TAG_ENUM)) != NULL)
 +  {
-+    fprintf(stderr, "DEBUG: Printer, %s, stopped.\n", device_uri);
-+     
-+    rc = CUPS_BACKEND_FAILED;
++    // Printer Stopped
++    if ( tmp_attribute->values[0].integer == IPP_PRINTER_STOPPED )
++    {
++      fprintf(stderr, "DEBUG: Printer, %s, stopped.\n", device_uri);
++      rc = FO_PRINTER_BAD;
++    }
++    // Printer Busy
++    else if ( tmp_attribute->values[0].integer == IPP_PRINTER_PROCESSING )
++    {
++      fprintf(stderr, "DEBUG: Printer %s is busy.\n", device_uri);
++      rc = FO_PRINTER_BUSY;
++    }
 +  }
 +
 +  /*
@@ -358,12 +396,12 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +      if (len > 8 && !strcmp(reason + len - 8, "-warning"))
 +      {
 +	fprintf(stderr, "DEBUG: Printer Supply Warning, %s\n", reason);
-+	rc = CUPS_BACKEND_FAILED;
++	rc = FO_PRINTER_BAD;
 +      }
 +      else if (len > 6 && !strcmp(reason + len - 6, "-error"))
 +      {
 +	fprintf(stderr, "DEBUG: Printer Supply Error, %s\n", reason);
-+	rc = CUPS_BACKEND_FAILED;
++	rc = FO_PRINTER_BAD;
 +      }
 +    }
 +  }
@@ -802,8 +840,8 @@ diff -up cups-1.6.3/backend/failover.c.failover-backend cups-1.6.3/backend/failo
 +    return (NULL);
 +}
 diff -up cups-1.6.3/backend/Makefile.failover-backend cups-1.6.3/backend/Makefile
---- cups-1.6.3/backend/Makefile.failover-backend	2014-10-21 16:58:31.298283423 +0100
-+++ cups-1.6.3/backend/Makefile	2014-10-21 16:59:16.972529746 +0100
+--- cups-1.6.3/backend/Makefile.failover-backend	2017-10-25 13:57:42.940337847 +0200
++++ cups-1.6.3/backend/Makefile	2017-10-25 13:57:43.032337219 +0200
 @@ -30,6 +30,7 @@ include ../Makedefs
  RBACKENDS =	\
  		ipp \

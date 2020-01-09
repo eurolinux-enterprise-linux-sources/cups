@@ -1,0 +1,11 @@
+diff -up cups-1.6.3/data/cups.service.in.ypbind cups-1.6.3/data/cups.service.in
+--- cups-1.6.3/data/cups.service.in.ypbind	2017-09-15 15:40:12.193292843 +0200
++++ cups-1.6.3/data/cups.service.in	2017-09-15 15:40:46.441010187 +0200
+@@ -1,6 +1,6 @@
+ [Unit]
+ Description=CUPS Printing Service
+-After=network.target
++After=network.target ypbind.service
+ 
+ [Service]
+ ExecStart=@sbindir@/cupsd -f

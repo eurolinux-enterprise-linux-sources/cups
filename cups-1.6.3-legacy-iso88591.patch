@@ -1,0 +1,135 @@
+diff -up cups-1.6.3/scheduler/cups-lpd.c.legacy-iso88591 cups-1.6.3/scheduler/cups-lpd.c
+--- cups-1.6.3/scheduler/cups-lpd.c.legacy-iso88591	2013-06-07 03:12:52.000000000 +0200
++++ cups-1.6.3/scheduler/cups-lpd.c	2017-09-21 15:16:28.104331875 +0200
+@@ -82,7 +82,7 @@ static int	remove_jobs(const char *name,
+ static int	send_state(const char *name, const char *list,
+ 		           int longstatus);
+ static char	*smart_gets(char *s, int len, FILE *fp);
+-
++static void smart_strlcpy(char *dst, const char *src, size_t dstsize);
+ 
+ /*
+  * 'main()' - Process an incoming LPD request...
+@@ -1053,15 +1053,15 @@ recv_print_job(
+ 	switch (line[0])
+ 	{
+ 	  case 'J' : /* Job name */
+-	      strlcpy(title, line + 1, sizeof(title));
++	      smart_strlcpy(title, line + 1, sizeof(title));
+ 	      break;
+ 
+           case 'N' : /* Document name */
+-              strlcpy(docname, line + 1, sizeof(docname));
++              smart_strlcpy(docname, line + 1, sizeof(docname));
+               break;
+ 
+ 	  case 'P' : /* User identification */
+-	      strlcpy(user, line + 1, sizeof(user));
++	      smart_strlcpy(user, line + 1, sizeof(user));
+ 	      break;
+ 
+ 	  case 'L' : /* Print banner page */
+@@ -1146,7 +1146,7 @@ recv_print_job(
+ 	  switch (line[0])
+ 	  {
+ 	    case 'N' : /* Document name */
+-		strlcpy(docname, line + 1, sizeof(docname));
++		smart_strlcpy(docname, line + 1, sizeof(docname));
+ 		break;
+ 
+ 	    case 'c' : /* Plot CIF file */
+@@ -1622,5 +1622,94 @@ smart_gets(char *s,			/* I - Pointer to
+ 
+ 
+ /*
++ * 'smart_strlcpy()' - Copy a string and convert from ISO-8859-1 to UTF-8 as needed.
++ */
++
++static void
++smart_strlcpy(char       *dst,		/* I - Output buffer */
++              const char *src,		/* I - Input string */
++              size_t     dstsize)	/* I - Size of output buffer */
++{
++  const unsigned char	*srcptr;	/* Pointer into input string */
++  unsigned char		*dstptr,	/* Pointer into output buffer */
++			*dstend;	/* End of output buffer */
++  int			saw_8859 = 0;	/* Saw an extended character that was not UTF-8? */
++
++
++  for (srcptr = (unsigned char *)src, dstptr = (unsigned char *)dst, dstend = dstptr + dstsize - 1; *srcptr;)
++  {
++    if (*srcptr < 0x80)
++      *dstptr++ = *srcptr++;		/* ASCII */
++    else if (saw_8859)
++    {
++     /*
++      * Map ISO-8859-1 (most likely character set for legacy LPD clients) to
++      * UTF-8...
++      */
++
++      if (dstptr > (dstend - 2))
++        break;
++
++      *dstptr++ = 0xc0 | (*srcptr >> 6);
++      *dstptr++ = 0x80 | (*srcptr++ & 0x3f);
++    }
++    else if ((*srcptr & 0xe0) == 0xc0 && (srcptr[1] & 0xc0) == 0x80)
++    {
++     /*
++      * 2-byte UTF-8 sequence...
++      */
++
++      if (dstptr > (dstend - 2))
++        break;
++
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++    }
++    else if ((*srcptr & 0xf0) == 0xe0 && (srcptr[1] & 0xc0) == 0x80 && (srcptr[2] & 0xc0) == 0x80)
++    {
++     /*
++      * 3-byte UTF-8 sequence...
++      */
++
++      if (dstptr > (dstend - 3))
++        break;
++
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++    }
++    else if ((*srcptr & 0xf8) == 0xf0 && (srcptr[1] & 0xc0) == 0x80 && (srcptr[2] & 0xc0) == 0x80 && (srcptr[3] & 0xc0) == 0x80)
++    {
++     /*
++      * 4-byte UTF-8 sequence...
++      */
++
++      if (dstptr > (dstend - 4))
++        break;
++
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++      *dstptr++ = *srcptr++;
++    }
++    else
++    {
++     /*
++      * Bad UTF-8 sequence, this must be an ISO-8859-1 string...
++      */
++
++      saw_8859 = 1;
++
++      if (dstptr > (dstend - 2))
++        break;
++
++      *dstptr++ = 0xc0 | (*srcptr >> 6);
++      *dstptr++ = 0x80 | (*srcptr++ & 0x3f);
++    }
++  }
++
++  *dstptr = '\0';
++}
++/*
+  * End of "$Id: cups-lpd.c 7899 2008-09-03 12:57:17Z mike $".
+  */

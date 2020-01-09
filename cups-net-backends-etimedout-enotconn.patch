@@ -1,0 +1,102 @@
+From 4cf66fef48e992ae8f8196db50a742c6276e415b Mon Sep 17 00:00:00 2001
+From: Michael Sweet <michael.r.sweet@gmail.com>
+Date: Thu, 5 Oct 2017 15:04:19 -0400
+Subject: [PATCH] The network backends now retry on more error conditions
+ (Issue #5123)
+
+---
+ backend/ipp.c    | 5 ++---
+ backend/lpd.c    | 5 ++---
+ backend/socket.c | 5 ++---
+ 4 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/backend/ipp.c b/backend/ipp.c
+index 685d4d9df..588ad995e 100644
+--- a/backend/ipp.c
++++ b/backend/ipp.c
+@@ -743,8 +743,7 @@ main(int  argc,				/* I - Number of command-line args */
+ 
+       fprintf(stderr, "DEBUG: Connection error: %s\n", strerror(errno));
+ 
+-      if (errno == ECONNREFUSED || errno == EHOSTDOWN ||
+-          errno == EHOSTUNREACH)
++      if (errno == ECONNREFUSED || errno == EHOSTDOWN || errno == EHOSTUNREACH || errno == ETIMEDOUT || errno == ENOTCONN)
+       {
+         if (contimeout && (time(NULL) - start_time) > contimeout)
+ 	{
+@@ -763,13 +762,13 @@ main(int  argc,				/* I - Number of command-line args */
+ 	      break;
+ 
+ 	  case EHOSTUNREACH :
++	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 				   _("The printer is unreachable at this "
+ 				     "time."));
+ 	      break;
+ 
+ 	  case ECONNREFUSED :
+-	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 	                           _("The printer is in use."));
+ 	      break;
+diff --git a/backend/lpd.c b/backend/lpd.c
+index 835f9eaee..4325b7c78 100644
+--- a/backend/lpd.c
++++ b/backend/lpd.c
+@@ -867,8 +867,7 @@ lpd_queue(const char      *hostname,	/* I - Host to connect to */
+ 
+       fprintf(stderr, "DEBUG: Connection error: %s\n", strerror(error));
+ 
+-      if (error == ECONNREFUSED || error == EHOSTDOWN ||
+-          error == EHOSTUNREACH)
++      if (errno == ECONNREFUSED || errno == EHOSTDOWN || errno == EHOSTUNREACH || errno == ETIMEDOUT || errno == ENOTCONN)
+       {
+         if (contimeout && (time(NULL) - start_time) > contimeout)
+ 	{
+@@ -886,13 +885,13 @@ lpd_queue(const char      *hostname,	/* I - Host to connect to */
+ 	      break;
+ 
+ 	  case EHOSTUNREACH :
++	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 			           _("The printer is unreachable at "
+ 				     "this time."));
+ 	      break;
+ 
+ 	  case ECONNREFUSED :
+-	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 	                           _("The printer is in use."));
+ 	      break;
+diff --git a/backend/socket.c b/backend/socket.c
+index 7fc0880f1..c16a1a097 100644
+--- a/backend/socket.c
++++ b/backend/socket.c
+@@ -330,8 +330,7 @@ main(int  argc,				/* I - Number of command-line arguments (6 or 7) */
+ 
+       fprintf(stderr, "DEBUG: Connection error: %s\n", strerror(error));
+ 
+-      if (error == ECONNREFUSED || error == EHOSTDOWN ||
+-          error == EHOSTUNREACH)
++      if (errno == ECONNREFUSED || errno == EHOSTDOWN || errno == EHOSTUNREACH || errno == ETIMEDOUT || errno == ENOTCONN)
+       {
+         if (contimeout && (time(NULL) - start_time) > contimeout)
+ 	{
+@@ -349,13 +348,13 @@ main(int  argc,				/* I - Number of command-line arguments (6 or 7) */
+ 	      break;
+ 
+ 	  case EHOSTUNREACH :
++	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 				   _("The printer is unreachable at this "
+ 				     "time."));
+ 	      break;
+ 
+ 	  case ECONNREFUSED :
+-	  default :
+ 	      _cupsLangPrintFilter(stderr, "WARNING",
+ 	                           _("The printer is in use."));
+ 	      break;
+-- 
+2.13.6
+

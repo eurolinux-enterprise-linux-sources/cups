@@ -11,7 +11,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 1.6.3
-Release: 29%{?dist}
+Release: 35%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Url: http://www.cups.org/
@@ -94,6 +94,12 @@ Patch63: cups-163-enotif.patch
 Patch64: cups-163-fdleak.patch
 Patch65: cups-state-message.patch
 Patch66: cups-1.6.3-resolv_reload.patch
+Patch67: cups-1.6.3-legacy-iso88591.patch
+Patch68: cups-1.6.3-ypbind.patch
+Patch69: cups-1.6.3-overriden-h.patch
+Patch70: cups-net-backends-etimedout-enotconn.patch
+Patch71: cups-1.6.3-tlsv12.patch
+Patch72: cups-1.6.3-page-count.patch
 
 Patch100: cups-lspp.patch
 
@@ -361,11 +367,22 @@ Sends IPP requests to the specified URI and tests and/or displays the results.
 %patch65 -p1 -b .state-message
 # CUPS does not recognize changes to /etc/resolv.conf until CUPS restart (bug #1325692)
 %patch66 -p1 -b .resolv_reload
-
+# cups-lpd program did not catch all legacy usage of ISO-8859-1 (bug #1386751)
+%patch67 -p1 -b .legacy-iso88591
+# CUPS may fail to start if NIS groups are used (bug #1441860)
+%patch68 -p1 -b .ypbind
+# The -h option is overridden by _cupsSetDefaults settings when the IPP port is not given (bug #1430882)
+%patch69 -p1 -b .overriden-h
 %if %lspp
 # LSPP support.
 %patch100 -p1 -b .lspp
 %endif
+# Failover backend won't fail-over if the printer is disconnected (bug #1469816)
+%patch70 -p1 -b .net-backends-etimedout-enotconn
+# Remove weak SSL/TLS ciphers from CUPS (bug #1466497)
+%patch71 -p1 -b .tlsv12
+# CUPS print jobs show incorrect number under the "pages" column (bug #1434153)
+%patch72 -p1 -b .page-count
 
 sed -i -e '1iMaxLogSize 0' conf/cupsd.conf.in
 
@@ -757,6 +774,27 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Fri Dec 15 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-35
+- 1466497 - Remove weak SSL/TLS ciphers from CUPS - fixing covscan issues
+
+* Mon Dec 11 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-34
+- 1466497 - Remove weak SSL/TLS ciphers from CUPS - fixing the patch
+
+* Wed Nov 01 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-33
+- 1466497 - Remove weak SSL/TLS ciphers from CUPS
+- 1434153 - CUPS print jobs show incorrect number under the "pages" column
+
+* Wed Oct 25 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-32
+- 1468747 - CUPS failover backend allows multiple jobs to get stuck in failed queue
+- 1469816 - Failover backend won't fail-over if the printer is disconnected
+
+* Mon Sep 25 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-31
+- 1430882 - The -h option is overridden by _cupsSetDefaults settings when the IPP port is not given
+
+* Fri Sep 22 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-30
+- 1386751 - cups-lpd program did not catch all legacy usage of ISO-8859-1
+- 1441860 - CUPS may fail to start if NIS groups are used 
+
 * Thu Apr 06 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1:1.6.3-29
 - fixing cups-1.6.3-resolv_reload.patch for rhbz#1325692
 
