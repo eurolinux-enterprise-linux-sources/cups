@@ -1,0 +1,43 @@
+diff -up cups-1.4.2/scheduler/conf.c.str3861 cups-1.4.2/scheduler/conf.c
+--- cups-1.4.2/scheduler/conf.c.str3861	2011-06-16 14:12:08.749375614 +0200
++++ cups-1.4.2/scheduler/conf.c	2011-06-16 15:01:37.981056836 +0200
+@@ -2495,11 +2495,11 @@ read_configuration(cups_file_t *fp)	/* I
+ 		      "FaxRetryLimit is deprecated; use "
+ 		      "JobRetryLimit on line %d.", linenum);
+     }
+-    else if (!strcasecmp(line, "Port") || !strcasecmp(line, "Listen")
++    else if ((!strcasecmp(line, "Port") || !strcasecmp(line, "Listen")
+ #ifdef HAVE_SSL
+              || !strcasecmp(line, "SSLPort") || !strcasecmp(line, "SSLListen")
+ #endif /* HAVE_SSL */
+-	     )
++	     ) && value)
+     {
+      /*
+       * Add listening address(es) to the list...
+@@ -3629,6 +3629,12 @@ read_location(cups_file_t *fp,		/* I - C
+     else if (!strcasecmp(line, "</Limit>") ||
+              !strcasecmp(line, "</LimitExcept>"))
+       loc = parent;
++    else if (!value)
++    {
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Missing value on line %d.", linenum);
++      if (FatalErrors & CUPSD_FATAL_CONFIG)
++	return (0);
++    }
+     else if (!parse_aaa(loc, line, value, linenum))
+     {
+       cupsdLogMessage(CUPSD_LOG_ERROR,
+@@ -3797,6 +3803,12 @@ read_policy(cups_file_t *fp,		/* I - Con
+ 
+       op = NULL;
+     }
++    else if (!value)
++    {
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Missing value on line %d.", linenum);
++      if (FatalErrors & CUPSD_FATAL_CONFIG)
++	return (0);
++    }
+     else if (!op)
+     {
+       cupsdLogMessage(CUPSD_LOG_ERROR,

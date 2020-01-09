@@ -1,0 +1,54 @@
+diff -up cups-1.4.2/backend/ipp.c.dns-failure-tolerance cups-1.4.2/backend/ipp.c
+--- cups-1.4.2/backend/ipp.c.dns-failure-tolerance	2010-12-09 17:51:47.000000000 +0100
++++ cups-1.4.2/backend/ipp.c	2010-12-09 18:15:32.855200190 +0100
+@@ -485,7 +485,7 @@ main(int  argc,				/* I - Number of comm
+     {
+       _cupsLangPrintf(stderr, _("ERROR: Unable to locate printer \'%s\'!\n"),
+ 		      hostname);
+-      return (CUPS_BACKEND_STOP);
++      return (CUPS_BACKEND_FAILED);
+     }
+ 
+     snmp_fd = _cupsSNMPOpen(addrlist->addr.addr.sa_family);
+@@ -647,7 +647,7 @@ main(int  argc,				/* I - Number of comm
+       {
+ 	_cupsLangPrintf(stderr, _("ERROR: Unable to locate printer \'%s\'!\n"),
+ 			hostname);
+-	return (CUPS_BACKEND_STOP);
++	return (CUPS_BACKEND_FAILED);
+       }
+       else
+       {
+diff -up cups-1.4.2/backend/lpd.c.dns-failure-tolerance cups-1.4.2/backend/lpd.c
+--- cups-1.4.2/backend/lpd.c.dns-failure-tolerance	2010-12-09 17:51:46.000000000 +0100
++++ cups-1.4.2/backend/lpd.c	2010-12-09 18:21:35.027200626 +0100
+@@ -434,7 +434,7 @@ main(int  argc,				/* I - Number of comm
+     {
+       _cupsLangPrintf(stderr, _("ERROR: Unable to locate printer \'%s\'!\n"),
+ 		      hostname);
+-      return (CUPS_BACKEND_STOP);
++      return (CUPS_BACKEND_FAILED);
+     }
+ 
+     snmp_fd = _cupsSNMPOpen(addrlist->addr.addr.sa_family);
+@@ -691,7 +691,7 @@ lpd_queue(const char *hostname,		/* I - 
+   {
+     _cupsLangPrintf(stderr, _("ERROR: Unable to locate printer \'%s\'!\n"),
+                     hostname);
+-    return (CUPS_BACKEND_STOP);
++    return (CUPS_BACKEND_FAILED);
+   }
+ 
+  /*
+diff -up cups-1.4.2/backend/socket.c.dns-failure-tolerance cups-1.4.2/backend/socket.c
+--- cups-1.4.2/backend/socket.c.dns-failure-tolerance	2010-12-09 17:51:47.000000000 +0100
++++ cups-1.4.2/backend/socket.c	2010-12-09 18:20:01.036201976 +0100
+@@ -267,7 +267,7 @@ main(int  argc,				/* I - Number of comm
+   {
+     _cupsLangPrintf(stderr, _("ERROR: Unable to locate printer \'%s\'!\n"),
+                     hostname);
+-    return (CUPS_BACKEND_STOP);
++    return (CUPS_BACKEND_FAILED);
+   }
+ 
+   fprintf(stderr, "DEBUG: Connecting to %s:%d\n", hostname, port);

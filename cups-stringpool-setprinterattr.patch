@@ -1,0 +1,68 @@
+diff -up cups-1.4.2/scheduler/printers.c.stringpool-setprinterattr cups-1.4.2/scheduler/printers.c
+--- cups-1.4.2/scheduler/printers.c.stringpool-setprinterattr	2014-04-02 12:32:38.549332230 +0100
++++ cups-1.4.2/scheduler/printers.c	2014-04-02 12:35:28.023615161 +0100
+@@ -2032,6 +2032,8 @@ cupsdSetPrinterAttr(
+   ipp_attribute_t	*attr;		/* Attribute */
+   int			i,		/* Looping var */
+ 			count;		/* Number of values */
++  char                  *value_dup;     /* Copy of attribute value string */
++  char                  *value_ptr;     /* Pointer into valtmp */
+   char			*ptr;		/* Pointer into value */
+   ipp_tag_t		value_tag;	/* Value tag for this attribute */
+ 
+@@ -2086,16 +2088,23 @@ cupsdSetPrinterAttr(
+       return;
+     }
+ 
+-    for (i = 0; i < count; i ++)
++    if ( (value_dup = strdup(value)) == NULL )
+     {
+-      if ((ptr = strchr(value, ',')) != NULL)
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to copy attribute value.");
++      return;
++    }
++
++    for (i = 0, value_ptr = value_dup; i < count; i ++)
++    {
++      if ((ptr = strchr(value_ptr, ',')) != NULL)
+         *ptr++ = '\0';
+ 
+-      attr->values[i].integer = strtol(value, NULL, 10);
++      attr->values[i].integer = strtol(value_ptr, NULL, 10);
+ 
+       if (ptr)
+-        value = ptr;
++        value_ptr = ptr;
+     }
++    free(value_dup);
+   }
+   else
+   {
+@@ -2136,16 +2145,23 @@ cupsdSetPrinterAttr(
+       return;
+     }
+ 
+-    for (i = 0; i < count; i ++)
++    if ( (value_dup = strdup(value)) == NULL )
++    {
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to copy attribute value.");
++      return;
++    }
++
++    for (i = 0, value_ptr = value_dup; i < count; i ++)
+     {
+-      if ((ptr = strchr(value, ',')) != NULL)
++      if ((ptr = strchr(value_ptr, ',')) != NULL)
+         *ptr++ = '\0';
+ 
+-      attr->values[i].string.text = _cupsStrAlloc(value);
++      attr->values[i].string.text = _cupsStrAlloc(value_ptr);
+ 
+       if (ptr)
+-        value = ptr;
++        value_ptr = ptr;
+     }
++    free(value_dup);
+   }
+ }
+ 

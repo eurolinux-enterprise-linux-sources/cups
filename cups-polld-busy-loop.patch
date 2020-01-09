@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/scheduler/cups-polld.c.polld-busy-loop cups-1.4.2/scheduler/cups-polld.c
+--- cups-1.4.2/scheduler/cups-polld.c.polld-busy-loop	2015-02-20 16:00:32.432734617 +0000
++++ cups-1.4.2/scheduler/cups-polld.c	2015-02-20 16:01:31.471556053 +0000
+@@ -179,6 +179,8 @@ main(int  argc,				/* I - Number of comm
+ 
+     if (remain > 0 && !restart_polling)
+       sleep(remain);
++    else if (restart_polling)
++      sleep(10);
+   }
+ 
+   return (1);

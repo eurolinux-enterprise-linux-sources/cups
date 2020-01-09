@@ -1,0 +1,57 @@
+diff -up cups-1.4.2/scheduler/cupsd.h.str3679 cups-1.4.2/scheduler/cupsd.h
+--- cups-1.4.2/scheduler/cupsd.h.str3679	2009-04-03 00:53:56.000000000 +0200
++++ cups-1.4.2/scheduler/cupsd.h	2010-12-09 16:29:34.064195722 +0100
+@@ -161,8 +161,10 @@ VAR int			MaxFDs		VALUE(0);
+ 
+ VAR time_t		ReloadTime	VALUE(0);
+ 					/* Time of reload request... */
+-VAR int			NeedReload	VALUE(RELOAD_ALL);
++VAR int			NeedReload	VALUE(RELOAD_ALL),
+ 					/* Need to load configuration? */
++			DoingShutdown	VALUE(0);
++					/* Shutting down the scheduler? */
+ VAR void		*DefaultProfile	VALUE(0);
+ 					/* Default security profile */
+ 
+diff -up cups-1.4.2/scheduler/job.c.str3679 cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.str3679	2010-12-09 16:13:24.000000000 +0100
++++ cups-1.4.2/scheduler/job.c	2010-12-09 16:15:58.353195684 +0100
+@@ -348,7 +348,7 @@ cupsdCheckJobs(void)
+     */
+ 
+     if (job->state_value == IPP_JOB_PENDING && !NeedReload && !Sleeping &&
+-        !job->printer)
++        !DoingShutdown && !job->printer)
+     {
+       printer = cupsdFindDest(job->dest);
+       pclass  = NULL;
+diff -up cups-1.4.2/scheduler/main.c.str3679 cups-1.4.2/scheduler/main.c
+--- cups-1.4.2/scheduler/main.c.str3679	2010-12-09 16:13:24.000000000 +0100
++++ cups-1.4.2/scheduler/main.c	2010-12-09 16:31:45.951202006 +0100
+@@ -756,6 +756,8 @@ main(int  argc,				/* I - Number of comm
+ 	* Shutdown the server...
+ 	*/
+ 
++	DoingShutdown = 1;
++
+ 	cupsdStopServer();
+ 
+        /*
+@@ -785,6 +787,8 @@ main(int  argc,				/* I - Number of comm
+         * Startup the server...
+         */
+ 
++	DoingShutdown = 0;
++
+         cupsdStartServer();
+ 
+        /*
+@@ -1161,6 +1165,8 @@ main(int  argc,				/* I - Number of comm
+   * Close all network clients...
+   */
+ 
++  DoingShutdown = 1;
++
+   cupsdStopServer();
+ 
+ #ifdef HAVE_LAUNCHD

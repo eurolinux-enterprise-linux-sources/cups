@@ -1,0 +1,1455 @@
+diff -up cups-1.4.2/doc/help/ref-cupsd-conf.html.in.synconclose cups-1.4.2/doc/help/ref-cupsd-conf.html.in
+--- cups-1.4.2/doc/help/ref-cupsd-conf.html.in.synconclose	2015-03-04 12:39:04.643684739 +0000
++++ cups-1.4.2/doc/help/ref-cupsd-conf.html.in	2015-03-04 12:39:04.694693624 +0000
+@@ -3003,6 +3003,37 @@ on for secure connections. Multiple <COD
+ can be specified to listen on multiple ports.</P>
+ 
+ 
++<H2 CLASS="title"><SPAN CLASS="info">CUPS 1.6.4</SPAN><A NAME="SyncOnClose">Sy
++
++<H3>Examples</H3>
++
++<PRE CLASS="command">
++SyncOnClose No
++SyncOnClose Yes
++</PRE>
++
++<H3>Description</H3>
++
++<P>The <CODE>SyncOnClose</CODE> directive determines whether the scheduler
++flushes changes to configuration and state files to disk. The default is
++<CODE>Yes</CODE>. The option <CODE>No</CODE> relies on the operating
++system to schedule a suitable time to write changes to disk.</P>
++
++<BLOCKQUOTE><B>Note:</B>
++
++<P>Setting <CODE>SyncOnClose</CODE> to <CODE>Yes</CODE> makes the
++scheduler use the <CODE>fsync(2)</CODE> system call to write all
++changes to disk, however the drive or network file system server may
++still delay writing data to disk. Do not depend on this functionality
++to prevent data loss in the event of unexpected hardware failure.</P>
++
++<P>Enabling <CODE>SyncOnClose</CODE> may also cause the scheduler to
++periodically become unresponsive while it waits for changes to be
++written.</P>
++
++</BLOCKQUOTE>
++
++
+ <H2 CLASS="title"><A NAME="SystemGroup">SystemGroup</A></H2>
+ 
+ <H3>Examples</H3>
+diff -up cups-1.4.2/man/cupsd.conf.man.in.synconclose cups-1.4.2/man/cupsd.conf.man.in
+--- cups-1.4.2/man/cupsd.conf.man.in.synconclose	2009-07-15 00:26:20.000000000 +0100
++++ cups-1.4.2/man/cupsd.conf.man.in	2015-03-04 12:39:04.694693624 +0000
+@@ -690,6 +690,12 @@ SSLPort
+ .br
+ Listens on the specified port for encrypted connections.
+ .TP 5
++SyncOnClose Yes
++.TP 5
++SyncOnClose No
++Specifies whether the scheduler calls \fIfsync(2)\fR after writing
++configuration state files. The default is Yes.
++.TP 5
+ SystemGroup group-name [group-name ...]
+ .br
+ Specifies the group(s) to use for System class authentication.
+diff -up cups-1.4.2/scheduler/classes.c.synconclose cups-1.4.2/scheduler/classes.c
+--- cups-1.4.2/scheduler/classes.c.synconclose	2015-03-04 12:39:04.598676901 +0000
++++ cups-1.4.2/scheduler/classes.c	2015-03-04 12:39:04.694693624 +0000
+@@ -306,13 +306,8 @@ cupsdLoadAllClasses(void)
+   */
+ 
+   snprintf(line, sizeof(line), "%s/classes.conf", ServerRoot);
+-  if ((fp = cupsFileOpen(line, "r")) == NULL)
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to open %s - %s", line,
+-		      strerror(errno));
++  if ((fp = cupsdOpenConfFile(line)) == NULL)
+     return;
+-  }
+ 
+  /*
+   * Read class configurations until we hit EOF...
+@@ -680,8 +675,8 @@ void
+ cupsdSaveAllClasses(void)
+ {
+   cups_file_t		*fp;		/* classes.conf file */
+-  char			temp[1024],	/* Temporary string */
+-			backup[1024],	/* printers.conf.O file */
++  char			filename[1024],	/* classes.conf filename */
++			temp[1024],	/* Temporary string */
+ 			value[2048];	/* Value string */
+   cupsd_printer_t	*pclass;	/* Current printer class */
+   int			i;		/* Looping var */
+@@ -694,35 +689,12 @@ cupsdSaveAllClasses(void)
+   * Create the classes.conf file...
+   */
+ 
+-  snprintf(temp, sizeof(temp), "%s/classes.conf", ServerRoot);
+-  snprintf(backup, sizeof(backup), "%s/classes.conf.O", ServerRoot);
+-
+-  if (rename(temp, backup))
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to backup classes.conf - %s",
+-                      strerror(errno));
+-  }
+-
+-  if ((fp = cupsFileOpen(temp, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to save classes.conf - %s",
+-                    strerror(errno));
++  snprintf(filename, sizeof(filename), "%s/classes.conf", ServerRoot);
+ 
+-    if (rename(backup, temp))
+-      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to restore classes.conf - %s",
+-                      strerror(errno));
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm)) == NULL)
+     return;
+-  }
+-  else
+-    cupsdLogMessage(CUPSD_LOG_INFO, "Saving classes.conf...");
+-
+- /*
+-  * Restrict access to the file...
+-  */
+ 
+-  fchown(cupsFileNumber(fp), RunUser, Group);
+-  fchmod(cupsFileNumber(fp), 0600);
++  cupsdLogMessage(CUPSD_LOG_INFO, "Saving classes.conf...");
+ 
+  /*
+   * Write a small header to the file...
+@@ -842,7 +814,7 @@ cupsdSaveAllClasses(void)
+     cupsFilePuts(fp, "</Class>\n");
+   }
+ 
+-  cupsFileClose(fp);
++  cupsdCloseCreatedConfFile(fp, filename);
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/client.c.synconclose cups-1.4.2/scheduler/client.c
+--- cups-1.4.2/scheduler/client.c.synconclose	2015-03-04 12:39:04.668689094 +0000
++++ cups-1.4.2/scheduler/client.c	2015-03-04 12:39:04.695693798 +0000
+@@ -3691,40 +3691,15 @@ get_file(cupsd_client_t *con,		/* I  - C
+ static http_status_t			/* O - Status */
+ install_conf_file(cupsd_client_t *con)	/* I - Connection */
+ {
++  char		filename[1024];		/* Configuration filename */
++  mode_t	mode;			/* Permissions */
+   cups_file_t	*in,			/* Input file */
+ 		*out;			/* Output file */
+-  char		buffer[1024];		/* Copy buffer */
+-  int		bytes;			/* Number of bytes */
+-  char		conffile[1024],		/* Configuration filename */
+-		newfile[1024],		/* New config filename */
+-		oldfile[1024];		/* Old config filename */
+-  struct stat	confinfo;		/* Config file info */
++  char		buffer[16384];		/* Copy buffer */
++  ssize_t	bytes;			/* Number of bytes */
+ 
+ 
+  /*
+-  * First construct the filenames...
+-  */
+-
+-  snprintf(conffile, sizeof(conffile), "%s%s", ServerRoot, con->uri + 11);
+-  snprintf(newfile, sizeof(newfile), "%s%s.N", ServerRoot, con->uri + 11);
+-  snprintf(oldfile, sizeof(oldfile), "%s%s.O", ServerRoot, con->uri + 11);
+-
+-  cupsdLogMessage(CUPSD_LOG_INFO, "Installing config file \"%s\"...", conffile);
+-
+- /*
+-  * Get the owner, group, and permissions of the configuration file.
+-  * If it doesn't exist, assign it to the User and Group in the
+-  * cupsd.conf file with mode 0640 permissions.
+-  */
+-
+-  if (stat(conffile, &confinfo))
+-  {
+-    confinfo.st_uid  = User;
+-    confinfo.st_gid  = Group;
+-    confinfo.st_mode = ConfigFilePerm;
+-  }
+-
+- /*
+   * Open the request file and new config file...
+   */
+ 
+@@ -3735,16 +3710,23 @@ install_conf_file(cupsd_client_t *con)	/
+     return (HTTP_SERVER_ERROR);
+   }
+ 
+-  if ((out = cupsFileOpen(newfile, "wb")) == NULL)
++  /*
++   * Open the new config file...
++   */
++
++  snprintf(filename, sizeof(filename), "%s%s", ServerRoot, con->uri + 11);
++  if (!strcmp(con->uri, "/admin/conf/printers.conf"))
++    mode = ConfigFilePerm & 0600;
++  else
++    mode = ConfigFilePerm;
++
++  if ((out = cupsdCreateConfFile(filename, mode)) == NULL)
+   {
+     cupsFileClose(in);
+-    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to open config file \"%s\" - %s",
+-                    newfile, strerror(errno));
+     return (HTTP_SERVER_ERROR);
+   }
+ 
+-  fchmod(cupsFileNumber(out), confinfo.st_mode);
+-  fchown(cupsFileNumber(out), confinfo.st_uid, confinfo.st_gid);
++  cupsdLogMessage(CUPSD_LOG_INFO, "Installing config file \"%s\"...", filename);
+ 
+  /*
+   * Copy from the request to the new config file...
+@@ -3754,12 +3736,14 @@ install_conf_file(cupsd_client_t *con)	/
+     if (cupsFileWrite(out, buffer, bytes) < bytes)
+     {
+       cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to copy to config file \"%s\" - %s",
+-        	      newfile, strerror(errno));
++                      "Unable to copy to config file \"%s\": %s",
++                  filename, strerror(errno));
+ 
+       cupsFileClose(in);
+       cupsFileClose(out);
+-      unlink(newfile);
++
++      snprintf(filename, sizeof(filename), "%s%s.N", ServerRoot, con->uri + 11);
++      cupsdRemoveFile(filename);
+ 
+       return (HTTP_SERVER_ERROR);
+     }
+@@ -3769,66 +3753,18 @@ install_conf_file(cupsd_client_t *con)	/
+   */
+ 
+   cupsFileClose(in);
+-  if (cupsFileClose(out))
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "Error file closing config file \"%s\" - %s",
+-                    newfile, strerror(errno));
+-
+-    unlink(newfile);
+ 
++  if (cupsdCloseCreatedConfFile(out, filename))
+     return (HTTP_SERVER_ERROR);
+-  }
+ 
+  /*
+   * Remove the request file...
+   */
+ 
+-  unlink(con->filename);
++  cupsdRemoveFile(con->filename);
+   cupsdClearString(&con->filename);
+ 
+  /*
+-  * Unlink the old backup, rename the current config file to the backup
+-  * filename, and rename the new config file to the config file name...
+-  */
+-
+-  if (unlink(oldfile))
+-    if (errno != ENOENT)
+-    {
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to remove backup config file \"%s\" - %s",
+-        	      oldfile, strerror(errno));
+-
+-      unlink(newfile);
+-
+-      return (HTTP_SERVER_ERROR);
+-    }
+-
+-  if (rename(conffile, oldfile))
+-    if (errno != ENOENT)
+-    {
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to rename old config file \"%s\" - %s",
+-        	      conffile, strerror(errno));
+-
+-      unlink(newfile);
+-
+-      return (HTTP_SERVER_ERROR);
+-    }
+-
+-  if (rename(newfile, conffile))
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "Unable to rename new config file \"%s\" - %s",
+-                    newfile, strerror(errno));
+-
+-    rename(oldfile, conffile);
+-    unlink(newfile);
+-
+-    return (HTTP_SERVER_ERROR);
+-  }
+-
+- /*
+   * If the cupsd.conf file was updated, set the NeedReload flag...
+   */
+ 
+diff -up cups-1.4.2/scheduler/conf.c.synconclose cups-1.4.2/scheduler/conf.c
+--- cups-1.4.2/scheduler/conf.c.synconclose	2015-03-04 12:39:04.689692753 +0000
++++ cups-1.4.2/scheduler/conf.c	2015-03-04 12:39:04.695693798 +0000
+@@ -179,6 +179,7 @@ static const cupsd_var_t	variables[] =
+   { "ServerRoot",		&ServerRoot,		CUPSD_VARTYPE_PATHNAME },
+   { "SMBConfigFile",		&SMBConfigFile,		CUPSD_VARTYPE_STRING },
+   { "StateDir",			&StateDir,		CUPSD_VARTYPE_STRING },
++  { "SyncOnClose",		&SyncOnClose,		CUPSD_VARTYPE_BOOLEAN },
+ #ifdef HAVE_AUTHORIZATION_H
+   { "SystemGroupAuthKey",	&SystemGroupAuthKey,	CUPSD_VARTYPE_STRING },
+ #endif /* HAVE_AUTHORIZATION_H */
+@@ -639,6 +640,7 @@ cupsdReadConfiguration(void)
+   MultipleOperationTimeout = DEFAULT_TIMEOUT;
+   ReloadTimeout	           = DEFAULT_KEEPALIVE;
+   RootCertDuration         = 300;
++  SyncOnClose              = TRUE;
+   Timeout                  = DEFAULT_TIMEOUT;
+   NumSystemGroups          = 0;
+ 
+diff -up cups-1.4.2/scheduler/conf.h.synconclose cups-1.4.2/scheduler/conf.h
+--- cups-1.4.2/scheduler/conf.h.synconclose	2015-03-04 12:39:04.512661920 +0000
++++ cups-1.4.2/scheduler/conf.h	2015-03-04 12:39:04.695693798 +0000
+@@ -222,6 +222,8 @@ VAR int			MaxClients		VALUE(100),
+ 					/* Root certificate update interval */
+ 			RunUser			VALUE(0),
+ 					/* User to run as, used for files */
++			SyncOnClose		VALUE(FALSE),
++					/* Call fsync() when closing files? */
+ 			PrintcapFormat		VALUE(PRINTCAP_BSD),
+ 					/* Format of printcap file? */
+ 			DefaultShared		VALUE(TRUE),
+diff -up cups-1.4.2/scheduler/cupsd.h.synconclose cups-1.4.2/scheduler/cupsd.h
+--- cups-1.4.2/scheduler/cupsd.h.synconclose	2015-03-04 12:39:04.696693972 +0000
++++ cups-1.4.2/scheduler/cupsd.h	2015-03-04 12:41:25.347118215 +0000
+@@ -195,53 +195,69 @@ VAR PSQUpdateQuotaProcPtr PSQUpdateQuota
+  * Prototypes...
+  */
+ 
+-extern void	cupsdCheckProcess(void);
+-extern void	cupsdClearString(char **s);
+-extern void	cupsdHoldSignals(void);
+-extern void	cupsdReleaseSignals(void);
+-extern void	cupsdSetString(char **s, const char *v);
+-extern void	cupsdSetStringf(char **s, const char *f, ...)
++/* env.c */
++extern void		cupsdInitEnv(void);
++extern int		cupsdLoadEnv(char *envp[], int envmax);
++extern void		cupsdSetEnv(const char *name, const char *value);
++extern void		cupsdSetEnvf(const char *name, const char *value, ...)
+ #ifdef __GNUC__
+ __attribute__ ((__format__ (__printf__, 2, 3)))
+ #endif /* __GNUC__ */
+ ;
+-extern void	cupsdStartServer(void);
+-extern void	cupsdStopServer(void);
+-extern void	cupsdClosePipe(int *fds);
+-extern int	cupsdOpenPipe(int *fds);
+-
+-extern void	cupsdInitEnv(void);
+-extern int	cupsdLoadEnv(char *envp[], int envmax);
+-extern void	cupsdSetEnv(const char *name, const char *value);
+-extern void	cupsdSetEnvf(const char *name, const char *value, ...)
++extern void		cupsdUpdateEnv(void);
++
++/* file.c */
++extern void		cupsdCleanFiles(const char *path, const char *pattern);
++extern int		cupsdCloseCreatedConfFile(cups_file_t *fp,
++                                      const char *filename);
++extern void		cupsdClosePipe(int *fds);
++extern cups_file_t	*cupsdCreateConfFile(const char *filename, mode_t mode);
++extern cups_file_t	*cupsdOpenConfFile(const char *filename);
++extern int		cupsdOpenPipe(int *fds);
++extern int		cupsdRemoveFile(const char *filename);
++
++/* main.c */
++extern int		cupsdAddString(cups_array_t **a, const char *s);
++extern void		cupsdCheckProcess(void);
++extern void		cupsdClearString(char **s);
++extern void		cupsdFreeStrings(cups_array_t **a);
++extern void		cupsdHoldSignals(void);
++extern char		*cupsdMakeUUID(const char *name, int number,
++                       char *buffer, size_t bufsize);
++extern void		cupsdReleaseSignals(void);
++extern void		cupsdSetString(char **s, const char *v);
++extern void		cupsdSetStringf(char **s, const char *f, ...)
+ #ifdef __GNUC__
+ __attribute__ ((__format__ (__printf__, 2, 3)))
+ #endif /* __GNUC__ */
+ ;
+-extern void	cupsdUpdateEnv(void);
+ 
+-extern void	*cupsdCreateProfile(int job_id);
+-extern void	cupsdDestroyProfile(void *profile);
+-extern int	cupsdEndProcess(int pid, int force);
+-extern const char *cupsdFinishProcess(int pid, char *name, int namelen,
+-		                      int *job_id);
+-extern int	cupsdStartProcess(const char *command, char *argv[],
+-				  char *envp[], int infd, int outfd,
+-				  int errfd, int backfd, int sidefd,
+-				  int root, void *profile, cupsd_job_t *job,
+-				  int *pid);
+-
+-extern int	cupsdAddSelect(int fd, cupsd_selfunc_t read_cb,
+-		               cupsd_selfunc_t write_cb, void *data);
+-extern int	cupsdDoSelect(long timeout);
++/* process.c */
++extern void		*cupsdCreateProfile(int job_id);
++extern void		cupsdDestroyProfile(void *profile);
++extern int		cupsdEndProcess(int pid, int force);
++extern const char	*cupsdFinishProcess(int pid, char *name, int namelen,
++                        int *job_id);
++extern int		cupsdStartProcess(const char *command, char *argv[],
++                      char *envp[], int infd, int outfd,
++                      int errfd, int backfd, int sidefd,
++                      int root, void *profile,
++                      cupsd_job_t *job, int *pid);
++
++/* select.c */
++extern int		cupsdAddSelect(int fd, cupsd_selfunc_t read_cb,
++                           cupsd_selfunc_t write_cb, void *data);
++extern int		cupsdDoSelect(long timeout);
+ #ifdef CUPSD_IS_SELECTING
+-extern int	cupsdIsSelecting(int fd);
++extern int		cupsdIsSelecting(int fd);
+ #endif /* CUPSD_IS_SELECTING */
+-extern void	cupsdRemoveSelect(int fd);
+-extern void	cupsdStartSelect(void);
+-extern void	cupsdStopSelect(void);
+-
+-extern int	cupsdRemoveFile(const char *filename);
++extern void		cupsdRemoveSelect(int fd);
++extern void		cupsdStartSelect(void);
++extern void		cupsdStopSelect(void);
++
++/* server.c */
++extern void		cupsdStartServer(void);
++extern void		cupsdStopServer(void);
+ 
+ 
+ /*
+diff -up cups-1.4.2/scheduler/dirsvc.c.synconclose cups-1.4.2/scheduler/dirsvc.c
+--- cups-1.4.2/scheduler/dirsvc.c.synconclose	2015-03-04 12:39:04.675690314 +0000
++++ cups-1.4.2/scheduler/dirsvc.c	2015-03-04 12:39:04.696693972 +0000
+@@ -328,7 +328,7 @@ cupsdLoadRemoteCache(void)
+   */
+ 
+   snprintf(line, sizeof(line), "%s/remote.cache", CacheDir);
+-  if ((fp = cupsFileOpen(line, "r")) == NULL)
++  if ((fp = cupsdOpenConfFile(line)) == NULL)
+     return;
+ 
+  /*
+@@ -724,8 +724,9 @@ void
+ cupsdSaveRemoteCache(void)
+ {
+   int			i;		/* Looping var */
+-  cups_file_t		*fp;		/* printers.conf file */
+-  char			temp[1024],	/* Temporary string */
++  cups_file_t		*fp;		/* remote.cache file */
++  char			filename[1024],	/* remote.cache filename */
++			temp[1024],	/* Temporary string */
+ 			value[2048];	/* Value string */
+   cupsd_printer_t	*printer;	/* Current printer class */
+   time_t		curtime;	/* Current time */
+@@ -737,23 +738,12 @@ cupsdSaveRemoteCache(void)
+   * Create the remote.cache file...
+   */
+ 
+-  snprintf(temp, sizeof(temp), "%s/remote.cache", CacheDir);
++  snprintf(filename, sizeof(filename), "%s/remote.cache", CacheDir);
+ 
+-  if ((fp = cupsFileOpen(temp, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "Unable to save remote.cache - %s", strerror(errno));
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm)) == NULL)
+     return;
+-  }
+-  else
+-    cupsdLogMessage(CUPSD_LOG_DEBUG, "Saving remote.cache...");
+-
+- /*
+-  * Restrict access to the file...
+-  */
+ 
+-  fchown(cupsFileNumber(fp), getuid(), Group);
+-  fchmod(cupsFileNumber(fp), ConfigFilePerm);
++  cupsdLogMessage(CUPSD_LOG_DEBUG, "Saving remote.cache...");
+ 
+  /*
+   * Write a small header to the file...
+@@ -845,7 +835,7 @@ cupsdSaveRemoteCache(void)
+       cupsFilePuts(fp, "</Printer>\n");
+   }
+ 
+-  cupsFileClose(fp);
++  cupsdCloseCreatedConfFile(fp, filename);
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/file.c.synconclose cups-1.4.2/scheduler/file.c
+--- cups-1.4.2/scheduler/file.c.synconclose	2015-03-04 12:39:04.697694146 +0000
++++ cups-1.4.2/scheduler/file.c	2015-03-04 12:39:04.697694146 +0000
+@@ -0,0 +1,473 @@
++/*
++ * "$Id$"
++ *
++ *   File functions for the CUPS scheduler.
++ *
++ *   Copyright 2007-2011 by Apple Inc.
++ *   Copyright 1997-2007 by Easy Software Products, all rights reserved.
++ *
++ *   These coded instructions, statements, and computer programs are the
++ *   property of Apple Inc. and are protected by Federal copyright
++ *   law.  Distribution and use rights are outlined in the file "LICENSE.txt"
++ *   "LICENSE" which should have been included with this file.  If this
++ *   file is missing or damaged, see the license at "http://www.cups.org/".
++ *
++ * Contents:
++ *
++ *   cupsdCleanFiles()           - Clean out old files.
++ *   cupsdCloseCreatedConfFile() - Close a created configuration file and move
++ *                                 into place.
++ *   cupsdClosePipe()            - Close a pipe as necessary.
++ *   cupsdCreateConfFile()       - Create a configuration file safely.
++ *   cupsdOpenConfFile()         - Open a configuration file.
++ *   cupsdOpenPipe()             - Create a pipe which is closed on exec.
++ *   cupsdRemoveFile()           - Remove a file using the 7-pass US DoD method.
++ *   overwrite_data()            - Overwrite the data in a file.
++ */
++
++/*
++ * Include necessary headers...
++ */
++
++#include "cupsd.h"
++#include <cups/dir.h>
++#include <fnmatch.h>
++#ifdef HAVE_REMOVEFILE
++#  include <removefile.h>
++#else
++static int	overwrite_data(int fd, const char *buffer, int bufsize,
++		               int filesize);
++#endif /* HAVE_REMOVEFILE */
++
++
++/*
++ * 'cupsdCleanFiles()' - Clean out old files.
++ */
++ 
++void
++cupsdCleanFiles(const char *path,	/* I - Directory to clean */
++                const char *pattern)	/* I - Filename pattern or NULL */
++{
++  cups_dir_t	*dir;			/* Directory */
++  cups_dentry_t	*dent;			/* Directory entry */
++  char		filename[1024];		/* Filename */
++  int		status;			/* Status from unlink/rmdir */
++
++
++  cupsdLogMessage(CUPSD_LOG_DEBUG,
++                  "cupsdCleanFiles(path=\"%s\", pattern=\"%s\")", path,
++		  pattern ? pattern : "(null)");
++
++  if ((dir = cupsDirOpen(path)) == NULL)
++  {
++    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to open directory \"%s\" - %s",
++		    path, strerror(errno));
++    return;
++  }
++
++  cupsdLogMessage(CUPSD_LOG_INFO, "Cleaning out old files in \"%s\"...", path);
++
++  while ((dent = cupsDirRead(dir)) != NULL)
++  {
++    if (pattern && fnmatch(pattern, dent->filename, 0))
++      continue;
++
++    snprintf(filename, sizeof(filename), "%s/%s", path, dent->filename);
++
++    if (S_ISDIR(dent->fileinfo.st_mode))
++    {
++      cupsdCleanFiles(filename, pattern);
++
++      status = rmdir(filename);
++    }
++    else
++      status = unlink(filename);
++
++    if (status)
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to remove \"%s\" - %s", filename,
++		      strerror(errno));
++    else
++      cupsdLogMessage(CUPSD_LOG_DEBUG, "Removed \"%s\"...", filename);
++  }
++
++  cupsDirClose(dir);
++}
++
++
++/*
++ * 'cupsdCloseCreatedConfFile()' - Close a created configuration file and move
++ *                                 into place.
++ */
++
++int					/* O - 0 on success, -1 on error */
++cupsdCloseCreatedConfFile(
++    cups_file_t *fp,			/* I - File to close */
++    const char  *filename)		/* I - Filename */
++{
++  char	newfile[1024],			/* filename.N */
++	oldfile[1024];			/* filename.O */
++
++
++ /*
++  * Synchronize changes to disk if SyncOnClose is enabled.
++  */
++
++  if (SyncOnClose)
++  {
++    if (cupsFileFlush(fp))
++    {
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to write changes to \"%s\": %s",
++		      filename, strerror(errno));
++      cupsFileClose(fp);
++      return (-1);
++    }
++
++    if (fsync(cupsFileNumber(fp)))
++    {
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to sync changes to \"%s\": %s",
++		      filename, strerror(errno));
++      cupsFileClose(fp);
++      return (-1);
++    }
++  }
++
++ /*
++  * First close the file...
++  */
++
++  if (cupsFileClose(fp))
++    return (-1);
++
++ /*
++  * Then remove "filename.O", rename "filename" to "filename.O", and rename
++  * "filename.N" to "filename".
++  */
++
++  snprintf(newfile, sizeof(newfile), "%s.N", filename);
++  snprintf(oldfile, sizeof(oldfile), "%s.O", filename);
++
++  if ((cupsdRemoveFile(oldfile) && errno != ENOENT) ||
++      (rename(filename, oldfile) && errno != ENOENT) ||
++      rename(newfile, filename))
++  {
++    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to finalize \"%s\": %s",
++                    filename, strerror(errno));
++    return (-1);
++  }
++
++  return (0);
++}
++
++
++/*
++ * 'cupsdClosePipe()' - Close a pipe as necessary.
++ */
++
++void
++cupsdClosePipe(int *fds)		/* I - Pipe file descriptors (2) */
++{
++ /*
++  * Close file descriptors as needed...
++  */
++
++  if (fds[0] >= 0)
++  {
++    close(fds[0]);
++    fds[0] = -1;
++  }
++
++  if (fds[1] >= 0)
++  {
++    close(fds[1]);
++    fds[1] = -1;
++  }
++}
++
++
++/*
++ * 'cupsdCreateConfFile()' - Create a configuration file safely.
++ */
++
++cups_file_t *				/* O - File pointer */
++cupsdCreateConfFile(
++    const char *filename,		/* I - Filename */
++    mode_t     mode)			/* I - Permissions */
++{
++  cups_file_t	*fp;			/* File pointer */
++  char		newfile[1024];		/* filename.N */
++
++
++  snprintf(newfile, sizeof(newfile), "%s.N", filename);
++  if ((fp = cupsFileOpen(newfile, "w")) == NULL)
++  {
++    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to create \"%s\": %s", newfile,
++		    strerror(errno));
++  }
++  else
++  {
++    if (!getuid() && fchown(cupsFileNumber(fp), getuid(), Group))
++      cupsdLogMessage(CUPSD_LOG_WARN, "Unable to change group for \"%s\": %s",
++		      newfile, strerror(errno));
++
++    if (fchmod(cupsFileNumber(fp), mode))
++      cupsdLogMessage(CUPSD_LOG_WARN,
++                      "Unable to change permissions for \"%s\": %s",
++		      newfile, strerror(errno));
++  }
++
++  return (fp);
++}
++
++
++/*
++ * 'cupsdOpenConfFile()' - Open a configuration file.
++ *
++ * This function looks for "filename.O" if "filename" does not exist and does
++ * a rename as needed.
++ */
++
++cups_file_t *				/* O - File pointer */
++cupsdOpenConfFile(const char *filename)	/* I - Filename */
++{
++  cups_file_t	*fp;			/* File pointer */
++
++
++  if ((fp = cupsFileOpen(filename, "r")) == NULL)
++  {
++    if (errno == ENOENT)
++    {
++     /*
++      * Try opening the backup file...
++      */
++
++      char	oldfile[1024];		/* filename.O */
++
++      snprintf(oldfile, sizeof(oldfile), "%s.O", filename);
++      fp = cupsFileOpen(oldfile, "r");
++    }
++    else
++      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to open \"%s\": %s", filename,
++		      strerror(errno));
++  }
++
++  return (fp);
++}
++
++
++/*
++ * 'cupsdOpenPipe()' - Create a pipe which is closed on exec.
++ */
++
++int					/* O - 0 on success, -1 on error */
++cupsdOpenPipe(int *fds)			/* O - Pipe file descriptors (2) */
++{
++ /*
++  * Create the pipe...
++  */
++
++  if (pipe(fds))
++  {
++    fds[0] = -1;
++    fds[1] = -1;
++
++    return (-1);
++  }
++
++ /*
++  * Set the "close on exec" flag on each end of the pipe...
++  */
++
++  if (fcntl(fds[0], F_SETFD, fcntl(fds[0], F_GETFD) | FD_CLOEXEC))
++  {
++    close(fds[0]);
++    close(fds[1]);
++
++    fds[0] = -1;
++    fds[1] = -1;
++
++    return (-1);
++  }
++
++  if (fcntl(fds[1], F_SETFD, fcntl(fds[1], F_GETFD) | FD_CLOEXEC))
++  {
++    close(fds[0]);
++    close(fds[1]);
++
++    fds[0] = -1;
++    fds[1] = -1;
++
++    return (-1);
++  }
++
++ /*
++  * Return 0 indicating success...
++  */
++
++  return (0);
++}
++
++
++/*
++ * 'cupsdRemoveFile()' - Remove a file using the 7-pass US DoD method.
++ */
++
++int					/* O - 0 on success, -1 on error */
++cupsdRemoveFile(const char *filename)	/* I - File to remove */
++{
++#ifdef HAVE_REMOVEFILE
++  return (removefile(filename, NULL, REMOVEFILE_SECURE_7_PASS));
++
++#else
++  int			fd;		/* File descriptor */
++  struct stat		info;		/* File information */
++  char			buffer[512];	/* Data buffer */
++  int			i;		/* Looping var */
++
++
++ /*
++  * First open the file for writing in exclusive mode.
++  */
++
++  if ((fd = open(filename, O_WRONLY | O_EXCL)) < 0)
++    return (-1);
++
++ /*
++  * Delete the file now - it will still be around as long as the file is
++  * open...
++  */
++
++  if (unlink(filename))
++  {
++    close(fd);
++    return (-1);
++  }
++
++ /*
++  * Then get the file size...
++  */
++
++  if (fstat(fd, &info))
++  {
++    close(fd);
++    return (-1);
++  }
++
++ /*
++  * Overwrite the file 7 times with 0xF6, 0x00, 0xFF, random, 0x00, 0xFF,
++  * and more random data.
++  */
++
++  memset(buffer, 0xF6, sizeof(buffer));
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  memset(buffer, 0x00, sizeof(buffer));
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  memset(buffer, 0xFF, sizeof(buffer));
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  CUPS_SRAND(time(NULL));
++
++  for (i = 0; i < sizeof(buffer); i ++)
++    buffer[i] = CUPS_RAND();
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  memset(buffer, 0x00, sizeof(buffer));
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  memset(buffer, 0xFF, sizeof(buffer));
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++  for (i = 0; i < sizeof(buffer); i ++)
++    buffer[i] = CUPS_RAND();
++  if (overwrite_data(fd, buffer, sizeof(buffer), (int)info.st_size))
++  {
++    close(fd);
++    return (-1);
++  }
++
++ /*
++  * Whew!  Close the file (which will lead to the actual deletion) and
++  * return success...
++  */
++
++  close(fd);
++  return (0);
++#endif /* HAVE_REMOVEFILE */
++}
++
++
++#ifndef HAVE_REMOVEFILE
++/*
++ * 'overwrite_data()' - Overwrite the data in a file.
++ */
++
++static int				/* O - 0 on success, -1 on error */
++overwrite_data(int        fd,		/* I - File descriptor */
++               const char *buffer,	/* I - Buffer to write */
++	       int        bufsize,	/* I - Size of buffer */
++               int        filesize)	/* I - Size of file */
++{
++  int	bytes;				/* Bytes to write/written */
++
++
++ /*
++  * Start at the beginning of the file...
++  */
++
++  if (lseek(fd, 0, SEEK_SET) < 0)
++    return (-1);
++
++ /*
++  * Fill the file with the provided data...
++  */
++
++  while (filesize > 0)
++  {
++    if (filesize > bufsize)
++      bytes = bufsize;
++    else
++      bytes = filesize;
++
++    if ((bytes = write(fd, buffer, bytes)) < 0)
++      return (-1);
++
++    filesize -= bytes;
++  }
++
++ /*
++  * Force the changes to disk...
++  */
++
++  return (SyncOnClose ? fsync(fd) : 0);
++}
++#endif /* HAVE_REMOVEFILE */
++
++
++/*
++ * End of "$Id$".
++ */
+diff -up cups-1.4.2/scheduler/job.c.synconclose cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.synconclose	2015-03-04 12:39:04.666688746 +0000
++++ cups-1.4.2/scheduler/job.c	2015-03-04 12:39:04.697694146 +0000
+@@ -1310,7 +1310,10 @@ cupsdDeleteJob(cupsd_job_t       *job,	/
+ 
+     snprintf(filename, sizeof(filename), "%s/c%05d", RequestRoot,
+ 	     job->id);
+-    unlink(filename);
++    if (Classification)
++      cupsdRemoveFile(filename);
++    else
++      unlink(filename);
+   }
+ 
+   cupsdClearString(&job->username);
+@@ -1344,7 +1347,10 @@ cupsdDeleteJob(cupsd_job_t       *job,	/
+       {
+ 	snprintf(filename, sizeof(filename), "%s/d%05d-%03d", RequestRoot,
+ 		 job->id, job->num_files);
+-	unlink(filename);
++	if (Classification)
++	  cupsdRemoveFile(filename);
++	else
++	  unlink(filename);
+ 
+ 	job->num_files --;
+       }
+@@ -1567,18 +1573,13 @@ cupsdLoadJob(cupsd_job_t *job)		/* I - J
+   cupsdLogMessage(CUPSD_LOG_DEBUG, "[Job %d] Loading attributes...", job->id);
+ 
+   snprintf(jobfile, sizeof(jobfile), "%s/c%05d", RequestRoot, job->id);
+-  if ((fp = cupsFileOpen(jobfile, "r")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-		    "[Job %d] Unable to open job control file \"%s\" - %s!",
+-		    job->id, jobfile, strerror(errno));
++  if ((fp = cupsdOpenConfFile(jobfile)) == NULL)
+     goto error;
+-  }
+ 
+   if (ippReadIO(fp, (ipp_iocb_t)cupsFileRead, 1, NULL, job->attrs) != IPP_DATA)
+   {
+     cupsdLogMessage(CUPSD_LOG_ERROR,
+-		    "[Job %d] Unable to read job control file \"%s\"!", job->id,
++		    "[Job %d] Unable to read job control file \"%s\".", job->id,
+ 		    jobfile);
+     cupsFileClose(fp);
+     goto error;
+@@ -1840,7 +1841,10 @@ cupsdLoadJob(cupsd_job_t *job)		/* I - J
+ 
+   job->num_files = 0;
+ 
+-  unlink(jobfile);
++  if (Classification)
++    cupsdRemoveFile(jobfile);
++  else
++    unlink(jobfile);
+ 
+   return (0);
+ }
+@@ -1954,30 +1958,19 @@ void
+ cupsdSaveAllJobs(void)
+ {
+   int		i;			/* Looping var */
+-  cups_file_t	*fp;			/* Job cache file */
+-  char		temp[1024];		/* Temporary string */
++  cups_file_t	*fp;			/* job.cache file */
++  char		filename[1024],		/* job.cache filename */
++		temp[1024];		/* Temporary string */
+   cupsd_job_t	*job;			/* Current job */
+   time_t	curtime;		/* Current time */
+   struct tm	*curdate;		/* Current date */
+ 
+ 
+-  snprintf(temp, sizeof(temp), "%s/job.cache", CacheDir);
+-  if ((fp = cupsFileOpen(temp, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "Unable to create job cache file \"%s\" - %s",
+-                    temp, strerror(errno));
++  snprintf(filename, sizeof(filename), "%s/job.cache", CacheDir);
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm)) == NULL)
+     return;
+-  }
+ 
+-  cupsdLogMessage(CUPSD_LOG_INFO, "Saving job cache file \"%s\"...", temp);
+-
+- /*
+-  * Restrict access to the file...
+-  */
+-
+-  fchown(cupsFileNumber(fp), getuid(), Group);
+-  fchmod(cupsFileNumber(fp), ConfigFilePerm);
++  cupsdLogMessage(CUPSD_LOG_INFO, "Saving job.cache...");
+ 
+  /*
+   * Write a small header to the file...
+@@ -2013,7 +2006,7 @@ cupsdSaveAllJobs(void)
+     cupsFilePuts(fp, "</Job>\n");
+   }
+ 
+-  cupsFileClose(fp);
++  cupsdCloseCreatedConfFile(fp, filename);
+ }
+ 
+ 
+@@ -2033,27 +2026,33 @@ cupsdSaveJob(cupsd_job_t *job)		/* I - J
+ 
+   snprintf(filename, sizeof(filename), "%s/c%05d", RequestRoot, job->id);
+ 
+-  if ((fp = cupsFileOpen(filename, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-		    "[Job %d] Unable to create job control file \"%s\" - %s.",
+-		    job->id, filename, strerror(errno));
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm & 0600)) == NULL)
+     return;
+-  }
+ 
+-  fchmod(cupsFileNumber(fp), 0600);
+   fchown(cupsFileNumber(fp), RunUser, Group);
+ 
+   job->attrs->state = IPP_IDLE;
+ 
+   if (ippWriteIO(fp, (ipp_iocb_t)cupsFileWrite, 1, NULL,
+                  job->attrs) != IPP_DATA)
++  {
+     cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "[Job %d] Unable to write job control file!", job->id);
++                    "[Job %d] Unable to write job control file.", job->id);
++    cupsFileClose(fp);
++    return;
++  }
+ 
+-  cupsFileClose(fp);
++  if (!cupsdCloseCreatedConfFile(fp, filename))
++  {
++   /*
++    * Remove backup file and mark this job as clean...
++    */
+ 
+-  job->dirty = 0;
++    strlcat(filename, ".O", sizeof(filename));
++    unlink(filename);
++
++    job->dirty = 0;
++  }
+ }
+ 
+ 
+@@ -2490,7 +2489,10 @@ cupsdSetJobState(
+ 	  {
+ 	    snprintf(filename, sizeof(filename), "%s/d%05d-%03d", RequestRoot,
+ 		     job->id, i);
+-	    unlink(filename);
++	    if (Classification)
++	      cupsdRemoveFile(filename);
++	    else
++	      unlink(filename);
+ 	  }
+ 
+ 	  if (job->num_files > 0)
+@@ -3427,15 +3429,9 @@ load_job_cache(const char *filename)	/*
+   * Open the job.cache file...
+   */
+ 
+-  if ((fp = cupsFileOpen(filename, "r")) == NULL)
++  if ((fp = cupsdOpenConfFile(filename)) == NULL)
+   {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to open job cache file \"%s\": %s",
+-                      filename, strerror(errno));
+-
+     load_request_root();
+-
+     return;
+   }
+ 
+@@ -3483,9 +3479,13 @@ load_job_cache(const char *filename)	/*
+       snprintf(jobfile, sizeof(jobfile), "%s/c%05d", RequestRoot, jobid);
+       if (access(jobfile, 0))
+       {
+-        cupsdLogMessage(CUPSD_LOG_ERROR, "[Job %d] Files have gone away!",
+-	                jobid);
+-        continue;
++	snprintf(jobfile, sizeof(jobfile), "%s/c%05d.N", RequestRoot, jobid);
++	if (access(jobfile, 0))
++	{
++	  cupsdLogMessage(CUPSD_LOG_ERROR, "[Job %d] Files have gone away!",
++			  jobid);
++	  continue;
++	}
+       }
+ 
+       job = calloc(1, sizeof(cupsd_job_t));
+diff -up cups-1.4.2/scheduler/main.c.synconclose cups-1.4.2/scheduler/main.c
+--- cups-1.4.2/scheduler/main.c.synconclose	2015-03-04 12:39:04.646685262 +0000
++++ cups-1.4.2/scheduler/main.c	2015-03-04 12:39:04.697694146 +0000
+@@ -15,8 +15,6 @@
+  * Contents:
+  *
+  *   main()                    - Main entry for the CUPS scheduler.
+- *   cupsdClosePipe()          - Close a pipe as necessary.
+- *   cupsdOpenPipe()           - Create a pipe which is closed on exec.
+  *   cupsdHoldSignals()        - Hold child and termination signals.
+  *   cupsdReleaseSignals()     - Release signals for delivery.
+  *   cupsdSetString()          - Set a string value.
+@@ -41,10 +39,10 @@
+ 
+ #define _MAIN_C_
+ #include "cupsd.h"
++#include "cups/dir.h"
+ #include <sys/resource.h>
+ #include <syslog.h>
+ #include <grp.h>
+-#include <cups/dir.h>
+ 
+ #ifdef HAVE_LAUNCH_H
+ #  include <launch.h>
+@@ -1256,84 +1254,6 @@ cupsdCheckProcess(void)
+ }
+ 
+ 
+-/*
+- * 'cupsdClosePipe()' - Close a pipe as necessary.
+- */
+-
+-void
+-cupsdClosePipe(int *fds)		/* I - Pipe file descriptors (2) */
+-{
+- /*
+-  * Close file descriptors as needed...
+-  */
+-
+-  if (fds[0] >= 0)
+-  {
+-    close(fds[0]);
+-    fds[0] = -1;
+-  }
+-
+-  if (fds[1] >= 0)
+-  {
+-    close(fds[1]);
+-    fds[1] = -1;
+-  }
+-}
+-
+-
+-/*
+- * 'cupsdOpenPipe()' - Create a pipe which is closed on exec.
+- */
+-
+-int					/* O - 0 on success, -1 on error */
+-cupsdOpenPipe(int *fds)			/* O - Pipe file descriptors (2) */
+-{
+- /*
+-  * Create the pipe...
+-  */
+-
+-  if (pipe(fds))
+-  {
+-    fds[0] = -1;
+-    fds[1] = -1;
+-
+-    return (-1);
+-  }
+-
+- /*
+-  * Set the "close on exec" flag on each end of the pipe...
+-  */
+-
+-  if (fcntl(fds[0], F_SETFD, fcntl(fds[0], F_GETFD) | FD_CLOEXEC))
+-  {
+-    close(fds[0]);
+-    close(fds[1]);
+-
+-    fds[0] = -1;
+-    fds[1] = -1;
+-
+-    return (-1);
+-  }
+-
+-  if (fcntl(fds[1], F_SETFD, fcntl(fds[1], F_GETFD) | FD_CLOEXEC))
+-  {
+-    close(fds[0]);
+-    close(fds[1]);
+-
+-    fds[0] = -1;
+-    fds[1] = -1;
+-
+-    return (-1);
+-  }
+-
+- /*
+-  * Return 0 indicating success...
+-  */
+-
+-  return (0);
+-}
+-
+-
+ /*
+  * 'cupsdClearString()' - Clear a string.
+  */
+diff -up cups-1.4.2/scheduler/Makefile.synconclose cups-1.4.2/scheduler/Makefile
+--- cups-1.4.2/scheduler/Makefile.synconclose	2015-03-04 12:39:04.647685436 +0000
++++ cups-1.4.2/scheduler/Makefile	2015-03-04 12:39:04.698694320 +0000
+@@ -24,6 +24,7 @@ CUPSDOBJS =	\
+ 		conf.o \
+ 		dirsvc.o \
+ 		env.o \
++		file.o \
+ 		main.o \
+ 		ipp.o \
+ 		listen.o \
+@@ -34,7 +35,6 @@ CUPSDOBJS =	\
+ 		printers.o \
+ 		process.o \
+ 		quotas.o \
+-		removefile.o \
+ 		select.o \
+ 		server.o \
+ 		statbuf.o \
+diff -up cups-1.4.2/scheduler/printers.c.synconclose cups-1.4.2/scheduler/printers.c
+--- cups-1.4.2/scheduler/printers.c.synconclose	2015-03-04 12:39:04.682691533 +0000
++++ cups-1.4.2/scheduler/printers.c	2015-03-04 12:39:04.698694320 +0000
+@@ -938,13 +938,8 @@ cupsdLoadAllPrinters(void)
+   */
+ 
+   snprintf(line, sizeof(line), "%s/printers.conf", ServerRoot);
+-  if ((fp = cupsFileOpen(line, "r")) == NULL)
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to open %s - %s", line,
+-		      strerror(errno));
++  if ((fp = cupsdOpenConfFile(line)) == NULL)
+     return;
+-  }
+ 
+  /*
+   * Read printer configurations until we hit EOF...
+@@ -1477,8 +1472,8 @@ cupsdSaveAllPrinters(void)
+ {
+   int			i;		/* Looping var */
+   cups_file_t		*fp;		/* printers.conf file */
+-  char			temp[1024],	/* Temporary string */
+-			backup[1024],	/* printers.conf.O file */
++  char			filename[1024],	/* printers.conf filename */
++			temp[1024],	/* Temporary string */
+ 			value[2048],	/* Value string */
+ 			*ptr;		/* Pointer into value */
+   cupsd_printer_t	*printer;	/* Current printer class */
+@@ -1492,35 +1487,12 @@ cupsdSaveAllPrinters(void)
+   * Create the printers.conf file...
+   */
+ 
+-  snprintf(temp, sizeof(temp), "%s/printers.conf", ServerRoot);
+-  snprintf(backup, sizeof(backup), "%s/printers.conf.O", ServerRoot);
+-
+-  if (rename(temp, backup))
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to backup printers.conf - %s", strerror(errno));
+-  }
+-
+-  if ((fp = cupsFileOpen(temp, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR,
+-                    "Unable to save printers.conf - %s", strerror(errno));
++  snprintf(filename, sizeof(filename), "%s/printers.conf", ServerRoot);
+ 
+-    if (rename(backup, temp))
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to restore printers.conf - %s", strerror(errno));
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm & 0600)) == NULL)
+     return;
+-  }
+-  else
+-    cupsdLogMessage(CUPSD_LOG_INFO, "Saving printers.conf...");
+ 
+- /*
+-  * Restrict access to the file...
+-  */
+-
+-  fchown(cupsFileNumber(fp), getuid(), Group);
+-  fchmod(cupsFileNumber(fp), 0600);
++  cupsdLogMessage(CUPSD_LOG_INFO, "Saving printers.conf...");
+ 
+  /*
+   * Write a small header to the file...
+@@ -1788,7 +1760,7 @@ cupsdSaveAllPrinters(void)
+ #endif /* __sgi */
+   }
+ 
+-  cupsFileClose(fp);
++  cupsdCloseCreatedConfFile(fp, filename);
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/subscriptions.c.synconclose cups-1.4.2/scheduler/subscriptions.c
+--- cups-1.4.2/scheduler/subscriptions.c.synconclose	2015-03-04 12:39:04.527664533 +0000
++++ cups-1.4.2/scheduler/subscriptions.c	2015-03-04 12:39:04.698694320 +0000
+@@ -744,14 +744,8 @@ cupsdLoadAllSubscriptions(void)
+   */
+ 
+   snprintf(line, sizeof(line), "%s/subscriptions.conf", ServerRoot);
+-  if ((fp = cupsFileOpen(line, "r")) == NULL)
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-		      "LoadAllSubscriptions: Unable to open %s - %s", line,
+-		      strerror(errno));
++  if ((fp = cupsdOpenConfFile(line)) == NULL)
+     return;
+-  }
+ 
+  /*
+   * Read all of the lines from the file...
+@@ -1089,8 +1083,8 @@ cupsdSaveAllSubscriptions(void)
+ {
+   int			i;		/* Looping var */
+   cups_file_t		*fp;		/* subscriptions.conf file */
+-  char			temp[1024];	/* Temporary string */
+-  char			backup[1024];	/* subscriptions.conf.O file */
++  char			filename[1024],	/* subscriptions.conf filename */
++			temp[1024];	/* Temporary string */
+   cupsd_subscription_t	*sub;		/* Current subscription */
+   time_t		curtime;	/* Current time */
+   struct tm		*curdate;	/* Current date */
+@@ -1103,36 +1097,12 @@ cupsdSaveAllSubscriptions(void)
+   * Create the subscriptions.conf file...
+   */
+ 
+-  snprintf(temp, sizeof(temp), "%s/subscriptions.conf", ServerRoot);
+-  snprintf(backup, sizeof(backup), "%s/subscriptions.conf.O", ServerRoot);
+-
+-  if (rename(temp, backup))
+-  {
+-    if (errno != ENOENT)
+-      cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to backup subscriptions.conf - %s",
+-                      strerror(errno));
+-  }
+-
+-  if ((fp = cupsFileOpen(temp, "w")) == NULL)
+-  {
+-    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to save subscriptions.conf - %s",
+-                    strerror(errno));
++  snprintf(filename, sizeof(filename), "%s/subscriptions.conf", ServerRoot);
+ 
+-    if (rename(backup, temp))
+-      cupsdLogMessage(CUPSD_LOG_ERROR,
+-                      "Unable to restore subscriptions.conf - %s",
+-                      strerror(errno));
++  if ((fp = cupsdCreateConfFile(filename, ConfigFilePerm)) == NULL)
+     return;
+-  }
+-  else
+-    cupsdLogMessage(CUPSD_LOG_INFO, "Saving subscriptions.conf...");
+ 
+- /*
+-  * Restrict access to the file...
+-  */
+-
+-  fchown(cupsFileNumber(fp), getuid(), Group);
+-  fchmod(cupsFileNumber(fp), ConfigFilePerm);
++  cupsdLogMessage(CUPSD_LOG_INFO, "Saving subscriptions.conf...");
+ 
+  /*
+   * Write a small header to the file...
+@@ -1233,7 +1203,7 @@ cupsdSaveAllSubscriptions(void)
+     cupsFilePuts(fp, "</Subscription>\n");
+   }
+ 
+-  cupsFileClose(fp);
++  cupsdCloseCreatedConfFile(fp, filename);
+ }
+ 
+ 

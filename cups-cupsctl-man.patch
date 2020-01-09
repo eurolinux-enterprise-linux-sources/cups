@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/man/cupsctl.man.cupsctl-man cups-1.4.2/man/cupsctl.man
+--- cups-1.4.2/man/cupsctl.man.cupsctl-man	2014-04-02 13:11:23.968035445 +0100
++++ cups-1.4.2/man/cupsctl.man	2014-04-02 13:11:57.340184625 +0100
+@@ -87,7 +87,7 @@ Get the current debug logging state:
+ .LP
+ Disable printer sharing:
+ .nf
+-    cupsctl --no-shared-printers
++    cupsctl --no-share-printers
+ .fi
+ .LP
+ Enable printing using the file: pseudo-device:

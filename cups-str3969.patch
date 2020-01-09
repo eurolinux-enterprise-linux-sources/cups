@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/doc/help/ref-page_log.html.str3969 cups-1.4.2/doc/help/ref-page_log.html
+--- cups-1.4.2/doc/help/ref-page_log.html.str3969	2009-05-13 22:39:17.000000000 +0100
++++ cups-1.4.2/doc/help/ref-page_log.html	2015-01-23 17:09:00.444824924 +0000
+@@ -23,7 +23,7 @@ DeskJet root 2 [20/May/1999:19:21:05 +00
+ 
+ </P>
+ 
+-<p>The <a href="ref-cupsd_conf.html#PageLogFormat"><code>PageLogFormat</code></a>
++<p>The <a href="ref-cupsd-conf.html#PageLogFormat"><code>PageLogFormat</code></a>
+ directive can be used to change this information.</p>
+ 
+ <P>The <I>printer</I> field contains the name of the printer that

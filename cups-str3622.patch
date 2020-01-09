@@ -1,0 +1,27 @@
+From 9cb9b4b552d75996adcc48cec160614f849c893c Mon Sep 17 00:00:00 2001
+From: mike <mike@7a7537e8-13f0-0310-91df-b6672ffda945>
+Date: Fri, 13 Aug 2010 01:32:09 +0000
+Subject: [PATCH] The socket backend could go into an infinite loop with
+ certain printers (STR #3622)
+
+git-svn-id: svn+ssh://src.apple.com/svn/cups/cups.org/trunk@9257 7a7537e8-13f0-0310-91df-b6672ffda945
+---
+ backend/runloop.c | 6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/backend/runloop.c b/backend/runloop.c
+index f07f597..e50dd0a 100644
+--- a/backend/runloop.c
++++ b/backend/runloop.c
+@@ -299,6 +299,8 @@ backendRunLoop(
+ 	        strerror(errno));
+ 	use_bc = 0;
+       }
++      else if (bc_bytes == 0)
++        use_bc = 0;
+     }
+ 
+    /*
+-- 
+2.5.0
+

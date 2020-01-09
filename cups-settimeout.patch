@@ -1,0 +1,635 @@
+diff -up cups-1.4.2/backend/ipp.c.settimeout cups-1.4.2/backend/ipp.c
+--- cups-1.4.2/backend/ipp.c.settimeout	2014-06-13 15:55:28.618184524 +0100
++++ cups-1.4.2/backend/ipp.c	2014-06-13 15:55:28.683184892 +0100
+@@ -26,6 +26,7 @@
+  *   report_printer_state() - Report the printer state.
+  *   run_pictwps_filter()   - Convert PICT files to PostScript when printing
+  *                            remotely.
++ *   timeout_cb()           - Handle HTTP timeouts.
+  *   sigterm_handler()      - Handle 'terminate' signals that stop the backend.
+  */
+ 
+@@ -137,6 +138,7 @@ static int	report_printer_state(ipp_t *i
+ #ifdef __APPLE__
+ static int	run_pictwps_filter(char **argv, const char *filename);
+ #endif /* __APPLE__ */
++static int	timeout_cb(http_t *http, void *user_data);
+ static void	sigterm_handler(int sig);
+ 
+ 
+@@ -689,6 +691,8 @@ main(int  argc,				/* I - Number of comm
+ 	      httpAddrString(http->hostaddr, addrname, sizeof(addrname)),
+ 	      ntohs(http->hostaddr->ipv4.sin_port));
+ 
++  httpSetTimeout(http, 30.0, timeout_cb, NULL);
++
+  /*
+   * See if the printer supports SNMP...
+   */
+@@ -2022,6 +2026,21 @@ sigterm_handler(int sig)		/* I - Signal
+ }
+ 
+ 
++/*
++ * 'timeout_cb()' - Handle HTTP timeouts.
++ */
++
++static int				/* O - 1 to continue, 0 to cancel */
++timeout_cb(http_t *http,		/* I - Connection to server (unused) */
++           void   *user_data)		/* I - User data (unused) */
++{
++  (void)http;
++  (void)user_data;
++
++  return (!job_cancelled);
++}
++
++
+ /*
+  * End of "$Id: ipp.c 8805 2009-08-31 16:34:06Z mike $".
+  */
+diff -up cups-1.4.2/cups/http.c.settimeout cups-1.4.2/cups/http.c
+--- cups-1.4.2/cups/http.c.settimeout	2014-06-13 15:55:28.181182050 +0100
++++ cups-1.4.2/cups/http.c	2014-06-13 15:56:26.586532188 +0100
+@@ -65,6 +65,8 @@
+  *   httpSetExpect()      - Set the Expect: header in a request.
+  *   httpSetField()       - Set the value of an HTTP header.
+  *   httpSetLength()      - Set the content-length and content-encoding.
++ *   httpSetTimeout()     - Set read/write timeouts and an optional
++ *	                    callback.
+  *   httpTrace()          - Send an TRACE request to the server.
+  *   httpUpdate()         - Update the current HTTP state for incoming data.
+  *   _httpWait()          - Wait for data available on a connection (no flush).
+@@ -84,6 +86,8 @@
+  *   http_read_ssl()      - Read from a SSL/TLS connection.
+  *   http_send()          - Send a request with all fields and the trailing
+  *                          blank line.
++ *   http_set_timeout()        - Set the socket timeout values.
++ *   http_set_wait()           - Set the default wait value for reads.
+  *   http_setup_ssl()     - Set up SSL/TLS support on a connection.
+  *   http_shutdown_ssl()  - Shut down SSL/TLS on a connection.
+  *   http_upgrade()       - Force upgrade to TLS encryption.
+@@ -101,6 +105,7 @@
+ #include "debug.h"
+ #include <stdlib.h>
+ #include <fcntl.h>
++#include <math.h>
+ #include <errno.h>
+ #ifndef WIN32
+ #  include <signal.h>
+@@ -139,6 +144,8 @@ static int		http_write_chunk(http_t *htt
+ 			                 int length);
+ #ifdef HAVE_SSL
+ static int		http_read_ssl(http_t *http, char *buf, int len);
++static void		http_set_timeout(int fd, double timeout);
++static void		http_set_wait(http_t *http);
+ static int		http_setup_ssl(http_t *http);
+ static void		http_shutdown_ssl(http_t *http);
+ static int		http_upgrade(http_t *http);
+@@ -249,7 +256,10 @@ httpBlocking(http_t *http,		/* I - Conne
+              int    b)			/* I - 1 = blocking, 0 = non-blocking */
+ {
+   if (http)
++  {
+     http->blocking = b;
++    http_set_wait(http);
++  }
+ }
+ 
+ 
+@@ -486,6 +496,8 @@ _httpCreate(
+   else
+     http->encryption = encryption;
+ 
++  http_set_wait(http);
++
+  /*
+   * Return the new structure...
+   */
+@@ -1040,8 +1052,11 @@ httpGets(char   *line,			/* I - Line to
+       * No newline; see if there is more data to be read...
+       */
+ 
+-      if (!http->blocking && !_httpWait(http, 10000, 1))
++      while (!_httpWait(http, http->wait_value, 1))
+       {
++	if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	  continue;
++
+         DEBUG_puts("3httpGets: Timed out!");
+ #ifdef WIN32
+         http->error = WSAETIMEDOUT;
+@@ -1069,18 +1084,37 @@ httpGets(char   *line,			/* I - Line to
+ 	*/
+ 
+ #ifdef WIN32
+-        if (WSAGetLastError() != http->error)
++        DEBUG_printf(("3httpGets: recv() error %d!", WSAGetLastError()));
++
++        if (WSAGetLastError() == WSAEINTR)
++	  continue;
++	else if (WSAGetLastError() == WSAEWOULDBLOCK)
++	{
++	  if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	    continue;
++
++	  http->error = WSAGetLastError();
++	}
++	else if (WSAGetLastError() != http->error)
+ 	{
+ 	  http->error = WSAGetLastError();
+ 	  continue;
+ 	}
+ 
+-        DEBUG_printf(("3httpGets: recv() error %d!", WSAGetLastError()));
+ #else
+         DEBUG_printf(("3httpGets: recv() error %d!", errno));
+ 
+-        if (errno == EINTR || errno == EAGAIN)
++        if (errno == EINTR)
+ 	  continue;
++	else if (errno == EWOULDBLOCK || errno == EAGAIN)
++	{
++	  if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	    continue;
++	  else if (!http->timeout_cb && errno == EAGAIN)
++	    continue;
++
++	  http->error = errno;
++	}
+ 	else if (errno != http->error)
+ 	{
+ 	  http->error = errno;
+@@ -1408,8 +1442,16 @@ httpRead2(http_t *http,			/* I - Connect
+     * Buffer small reads for better performance...
+     */
+ 
+-    if (!http->blocking && !httpWait(http, 10000))
+-      return (0);
++    if (!http->blocking)
++    {
++      while (!httpWait(http, http->wait_value))
++      {
++	if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	  continue;
++
++	return (0);
++      }
++    }
+ 
+     if (http->data_remaining > sizeof(http->buffer))
+       bytes = sizeof(http->buffer);
+@@ -1436,10 +1478,35 @@ httpRead2(http_t *http,			/* I - Connect
+     else if (bytes < 0)
+     {
+ #ifdef WIN32
+-      http->error = WSAGetLastError();
+-      return (-1);
++      if (WSAGetLastError() != WSAEINTR)
++      {
++	http->error = WSAGetLastError();
++	return (-1);
++      }
++      else if (WSAGetLastError() == WSAEWOULDBLOCK)
++      {
++	if (!http->timeout_cb ||
++	    !(*http->timeout_cb)(http, http->timeout_data))
++	{
++	  http->error = WSAEWOULDBLOCK;
++	  return (-1);
++	}
++      }
+ #else
+-      if (errno != EINTR && errno != EAGAIN)
++      if (errno == EWOULDBLOCK || errno == EAGAIN)
++      {
++	if (http->timeout_cb && !(*http->timeout_cb)(http, http->timeout_data))
++	{
++	  http->error = errno;
++	  return (-1);
++	}
++	else if (!http->timeout_cb && errno != EAGAIN)
++	{
++	  http->error = errno;
++	  return (-1);
++	}
++      }
++      else if (errno != EINTR)
+       {
+         http->error = errno;
+         return (-1);
+@@ -1472,26 +1539,81 @@ httpRead2(http_t *http,			/* I - Connect
+ #ifdef HAVE_SSL
+   else if (http->tls)
+   {
+-    if (!http->blocking && !httpWait(http, 10000))
+-      return (0);
++    if (!http->blocking)
++    {
++      while (!httpWait(http, http->wait_value))
++      {
++	if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	  continue;
+ 
+-    bytes = (ssize_t)http_read_ssl(http, buffer, (int)length);
++	return (0);
++      }
++    }
++
++    while ((bytes = (ssize_t)http_read_ssl(http, buffer, (int)length)) < 0)
++    {
++#ifdef WIN32
++      if (WSAGetLastError() == WSAEWOULDBLOCK)
++      {
++        if (!http->timeout_cb || !(*http->timeout_cb)(http, http->timeout_data))
++	  break;
++      }
++      else if (WSAGetLastError() != WSAEINTR)
++        break;
++#else
++      if (errno == EWOULDBLOCK || errno == EAGAIN)
++      {
++        if (http->timeout_cb && !(*http->timeout_cb)(http, http->timeout_data))
++	  break;
++        else if (!http->timeout_cb && errno != EAGAIN)
++	  break;
++      }
++      else if (errno != EINTR)
++        break;
++#endif /* WIN32 */
++    }
+   }
+ #endif /* HAVE_SSL */
+   else
+   {
+-    if (!http->blocking && !httpWait(http, 10000))
+-      return (0);
++    if (!http->blocking)
++    {
++      while (!httpWait(http, http->wait_value))
++      {
++	if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	  continue;
++
++	return (0);
++      }
++    }
+ 
+     DEBUG_printf(("2httpRead2: reading " CUPS_LLFMT " bytes from socket...",
+                   CUPS_LLCAST length));
+ 
+ #ifdef WIN32
+-    bytes = (ssize_t)recv(http->fd, buffer, (int)length, 0);
++    while ((bytes = (ssize_t)recv(http->fd, buffer, (int)length, 0)) < 0)
++    {
++      if (WSAGetLastError() == WSAEWOULDBLOCK)
++      {
++        if (!http->timeout_cb || !(*http->timeout_cb)(http, http->timeout_data))
++	  break;
++      }
++      else if (WSAGetLastError() != WSAEINTR)
++        break;
++    }
+ #else
+     while ((bytes = recv(http->fd, buffer, length, 0)) < 0)
+-      if (errno != EINTR && errno != EAGAIN)
+-        break;
++    {
++      if (errno == EWOULDBLOCK || errno == EAGAIN)
++      {
++	if (http->timeout_cb && !(*http->timeout_cb)(http, http->timeout_data))
++	  break;
++	else if (!http->timeout_cb && errno != EAGAIN)
++	  break;
++      }
++      else if (errno != EINTR)
++	break;
++    }
+ #endif /* WIN32 */
+ 
+     DEBUG_printf(("2httpRead2: read " CUPS_LLFMT " bytes from socket...",
+@@ -1510,9 +1632,12 @@ httpRead2(http_t *http,			/* I - Connect
+   else if (bytes < 0)
+   {
+ #ifdef WIN32
+-    http->error = WSAGetLastError();
++    if (WSAGetLastError() == WSAEINTR)
++      bytes = 0;
++    else
++      http->error = WSAGetLastError();
+ #else
+-    if (errno == EINTR || errno == EAGAIN)
++    if (errno == EINTR || (errno == EAGAIN && !http->timeout_cb))
+       bytes = 0;
+     else
+       http->error = errno;
+@@ -1570,8 +1695,11 @@ _httpReadCDSA(
+     * Make sure we have data before we read...
+     */
+ 
+-    if (!_httpWait(http, 10000, 0))
++    while (!_httpWait(http, http->wait_value, 0))
+     {
++      if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	continue;
++
+       http->error = ETIMEDOUT;
+       return (-1);
+     }
+@@ -1631,8 +1759,11 @@ _httpReadGNUTLS(
+     * Make sure we have data before we read...
+     */
+ 
+-    if (!_httpWait(http, 10000, 0))
++    while (!_httpWait(http, http->wait_value, 0))
+     {
++      if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	continue;
++
+       http->error = ETIMEDOUT;
+       return (-1);
+     }
+@@ -1719,6 +1850,9 @@ httpReconnect(http_t *http)		/* I - Conn
+ 
+   DEBUG_printf(("2httpReconnect: New socket=%d", http->fd));
+ 
++  if (http->timeout_value > 0)
++    http_set_timeout(http->fd, http->timeout_value);
++
+   http->hostaddr = &(addr->addr);
+   http->error    = 0;
+   http->status   = HTTP_CONTINUE;
+@@ -1952,6 +2086,37 @@ httpSetLength(http_t *http,		/* I - Conn
+ 
+ 
+ /*
++ * 'httpSetTimeout()' - Set read/write timeouts and an optional callback.
++ *
++ * The optional timeout callback receives both the HTTP connection and a user
++ * data pointer and must return 1 to continue or 0 to error (time) out.
++ *
++ * @since CUPS 1.5/Mac OS X 10.7@
++ */
++
++void
++httpSetTimeout(
++    http_t            *http,		/* I - Connection to server */
++    double            timeout,		/* I - Number of seconds for timeout,
++                                               must be greater than 0 */
++    http_timeout_cb_t cb,		/* I - Callback function or NULL */
++    void              *user_data)	/* I - User data pointer */
++{
++  if (!http || timeout <= 0.0)
++    return;
++
++  http->timeout_cb    = cb;
++  http->timeout_data  = user_data;
++  http->timeout_value = timeout;
++
++  if (http->fd >= 0)
++    http_set_timeout(http->fd, timeout);
++
++  http_set_wait(http);
++}
++
++
++/*
+  * 'httpTrace()' - Send an TRACE request to the server.
+  */
+ 
+@@ -2599,8 +2764,11 @@ http_bio_read(BIO  *h,			/* I - BIO data
+     * Make sure we have data before we read...
+     */
+ 
+-    if (!_httpWait(http, 10000, 0))
++    while (!_httpWait(http, http->wait_value, 0))
+     {
++      if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	continue;
++
+ #ifdef WIN32
+       http->error = WSAETIMEDOUT;
+ #else
+@@ -2940,6 +3108,52 @@ http_send(http_t       *http,	/* I - Con
+ }
+ 
+ 
++/*
++ * 'http_set_timeout()' - Set the socket timeout values.
++ */
++
++static void
++http_set_timeout(int    fd,		/* I - File descriptor */
++                 double timeout)	/* I - Timeout in seconds */
++{
++#ifdef WIN32
++  DWORD tv = (DWORD)(timeout * 1000);
++				      /* Timeout in milliseconds */
++
++  setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));
++  setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(tv));
++
++#else
++  struct timeval tv;			/* Timeout in secs and usecs */
++
++  tv.tv_sec  = (int)timeout;
++  tv.tv_usec = (int)(1000000 * fmod(timeout, 1.0));
++
++  setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
++  setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
++#endif /* WIN32 */
++}
++
++
++/*
++ * 'http_set_wait()' - Set the default wait value for reads.
++ */
++
++static void
++http_set_wait(http_t *http)		/* I - Connection to server */
++{
++  if (http->blocking)
++  {
++    http->wait_value = (int)(http->timeout_value * 1000);
++
++    if (http->wait_value <= 0)
++      http->wait_value = 60000;
++  }
++  else
++    http->wait_value = 10000;
++}
++
++
+ #ifdef HAVE_SSL
+ /*
+  * 'http_setup_ssl()' - Set up SSL/TLS support on a connection.
+@@ -3263,6 +3477,62 @@ http_write(http_t     *http,		/* I - Con
+ 
+   while (length > 0)
+   {
++    if (http->timeout_cb)
++    {
++#ifdef HAVE_POLL
++      struct pollfd	pfd;		/* Polled file descriptor */
++#else
++      fd_set		output_set;	/* Output ready for write? */
++      struct timeval	timeout;	/* Timeout value */
++#endif /* HAVE_POLL */
++      int		nfds;		/* Result from select()/poll() */
++
++      do
++      {
++#ifdef HAVE_POLL
++	pfd.fd     = http->fd;
++	pfd.events = POLLOUT;
++
++	while ((nfds = poll(&pfd, 1, http->wait_value)) < 0 &&
++	       (errno == EINTR || errno == EAGAIN));
++
++#else
++	do
++	{
++	  FD_ZERO(&output_set);
++	  FD_SET(http->fd, &output_set);
++
++	  timeout.tv_sec  = http->wait_value / 1000;
++	  timeout.tv_usec = 1000 * (http->wait_value % 1000);
++
++	  nfds = select(http->fd + 1, NULL, &output_set, NULL, &timeout);
++	}
++#  ifdef WIN32
++	while (nfds < 0 && (WSAGetLastError() == WSAEINTR ||
++			    WSAGetLastError() == WSAEWOULDBLOCK));
++#  else
++	while (nfds < 0 && (errno == EINTR || errno == EAGAIN));
++#  endif /* WIN32 */
++#endif /* HAVE_POLL */
++
++        if (nfds < 0)
++	{
++	  http->error = errno;
++	  return (-1);
++	}
++	else if (nfds == 0 && !(*http->timeout_cb)(http, http->timeout_data))
++	{
++#ifdef WIN32
++	  http->error = WSAEWOULDBLOCK;
++#else
++	  http->error = EWOULDBLOCK;
++#endif /* WIN32 */
++	  return (-1);
++	}
++      }
++      while (nfds <= 0);
++    }
++
+ #ifdef HAVE_SSL
+     if (http->tls)
+       bytes = http_write_ssl(http, buffer, length);
+@@ -3273,14 +3543,34 @@ http_write(http_t     *http,		/* I - Con
+     if (bytes < 0)
+     {
+ #ifdef WIN32
+-      if (WSAGetLastError() != http->error)
++      if (WSAGetLastError() == WSAEINTR)
++        continue;
++      else if (WSAGetLastError() == WSAEWOULDBLOCK)
++      {
++        if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++          continue;
++
++        http->error = WSAGetLastError();
++      }
++      else if (WSAGetLastError() != http->error &&
++               WSAGetLastError() != WSAECONNRESET)
+       {
+         http->error = WSAGetLastError();
+ 	continue;
+       }
++
+ #else
+-      if (errno == EINTR || errno == EAGAIN)
+-        continue;
++      if (errno == EINTR)
++	continue;
++      else if (errno == EWOULDBLOCK || errno == EAGAIN)
++      {
++	if (http->timeout_cb && (*http->timeout_cb)(http, http->timeout_data))
++	  continue;
++	else if (!http->timeout_cb && errno == EAGAIN)
++	  continue;
++
++	http->error = errno;
++      }
+       else if (errno != http->error && errno != ECONNRESET)
+       {
+         http->error = errno;
+diff -up cups-1.4.2/cups/http.h.settimeout cups-1.4.2/cups/http.h
+--- cups-1.4.2/cups/http.h.settimeout	2009-06-22 21:40:28.000000000 +0100
++++ cups-1.4.2/cups/http.h	2014-06-13 15:55:28.684184898 +0100
+@@ -317,6 +317,9 @@ typedef struct http_addrlist_s		/**** So
+ 
+ typedef struct _http_s http_t;		/**** HTTP connection type ****/
+ 
++typedef int (*http_timeout_cb_t)(http_t *http, void *user_data);
++					/**** HTTP timeout callback @since CUPS 1.5/Mac OS X 10.7@ ****/
++
+ 
+ /*
+  * Prototypes...
+@@ -440,6 +443,10 @@ extern char		*httpGetAuthString(http_t *
+ extern void		httpSetAuthString(http_t *http, const char *scheme,
+ 			                  const char *data) _CUPS_API_1_3;
+ 
++/**** New in CUPS 1.5/Mac OS X 10.7 ****/
++extern void		httpSetTimeout(http_t *http, double timeout,
++				       http_timeout_cb_t cb, void *user_data);
++
+ /*
+  * C++ magic...
+  */
+diff -up cups-1.4.2/cups/http-private.h.settimeout cups-1.4.2/cups/http-private.h
+--- cups-1.4.2/cups/http-private.h.settimeout	2009-04-07 16:48:14.000000000 +0100
++++ cups-1.4.2/cups/http-private.h	2014-06-13 15:55:28.685184903 +0100
+@@ -188,6 +188,12 @@ struct _http_s				/**** HTTP connection
+ #  ifdef HAVE_AUTHORIZATION_H
+   AuthorizationRef	auth_ref;	/* Authorization ref */
+ #  endif /* HAVE_AUTHORIZATION_H */
++
++    /**** New in CUPS 1.5 ****/
++    http_timeout_cb_t	timeout_cb;	/* Timeout callback @since CUPS 1.5/Mac OS X 10.7@ */
++    void		*timeout_data;	/* User data pointer */
++    double		timeout_value;	/* Timeout in seconds */
++    int			wait_value;	/* httpWait value for timeout */
+ };
+ 
+ 
+diff -up cups-1.4.2/cups/request.c.settimeout cups-1.4.2/cups/request.c
+--- cups-1.4.2/cups/request.c.settimeout	2009-08-29 07:05:14.000000000 +0100
++++ cups-1.4.2/cups/request.c	2014-06-13 15:55:28.685184903 +0100
+@@ -658,6 +658,15 @@ cupsSendRequest(http_t     *http,	/* I -
+ 	  break;
+       }
+ 
++
++    if (state == IPP_ERROR)
++    {
++      http->status = HTTP_ERROR;
++      http->state  = HTTP_WAITING;
++
++      return (HTTP_ERROR);
++    }
++
+    /*
+     * Wait up to 1 second to get the 100-continue response as needed...
+     */
+--- cups-1.4.2/scheduler/client.c.settimeout	2014-06-19 13:36:53.746593104 +0100
++++ cups-1.4.2/scheduler/client.c	2014-06-19 13:38:30.851099969 +0100
+@@ -187,6 +187,7 @@ cupsdAcceptClient(cupsd_listener_t *lis)
+   con->http.activity = time(NULL);
+   con->file          = -1;
+   con->http.hostaddr = &(con->clientaddr);
++  con->http.wait_value = 10000;
+ 
+  /*
+   * Accept the client and get the remote address...

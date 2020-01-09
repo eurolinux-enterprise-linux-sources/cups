@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/conf/snmp.conf.in.snmp-conf-typo cups-1.4.2/conf/snmp.conf.in
+--- cups-1.4.2/conf/snmp.conf.in.snmp-conf-typo	2011-02-01 12:16:19.583820382 +0100
++++ cups-1.4.2/conf/snmp.conf.in	2011-02-01 12:16:28.699806873 +0100
+@@ -1,7 +1,7 @@
+ #
+ # "$Id$"
+ #
+-#   Sample SNMP configuration file for CUPS.  See "man cups-smnp.conf" for a
++#   Sample SNMP configuration file for CUPS.  See "man cups-snmp.conf" for a
+ #   complete description of this file.
+ #
+ 

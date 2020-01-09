@@ -1,0 +1,19 @@
+diff -Naur cups-1.4.2.old/scheduler/client.c cups-1.4.2.new/scheduler/client.c
+--- cups-1.4.2.old/scheduler/client.c	2011-09-20 12:39:14.616352000 -0700
++++ cups-1.4.2.new/scheduler/client.c	2011-09-20 12:42:39.544944000 -0700
+@@ -2319,6 +2319,15 @@
+ 		return;
+ 	      }
+ 	    }
++	    else if (filestats.st_size == 0)
++	    {
++	     /*
++	      * Don't allow empty file...
++	      */
++
++	      unlink(con->filename);
++	      cupsdClearString(&con->filename);
++	    }
+ 
+ 	    if (con->command)
+ 	    {

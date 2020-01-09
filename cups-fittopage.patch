@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/man/lp.man.fittopage cups-1.4.2/man/lp.man
+--- cups-1.4.2/man/lp.man.fittopage	2016-11-02 13:38:37.541636001 +0100
++++ cups-1.4.2/man/lp.man	2016-11-02 13:39:55.481990296 +0100
+@@ -187,7 +187,7 @@ landscape pages.
+ .TP 5
+ -o fitplot
+ .br
+-Scales the print file to fit on the page.
++Scales the print file to fit on the page. This option does not work for printers with HW margins.
+ .TP 5
+ -o number-up=2
+ .TP 5

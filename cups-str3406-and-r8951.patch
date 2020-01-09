@@ -1,0 +1,119 @@
+diff -up cups-1.4.2/cgi-bin/admin.c.str3406-and-r8951 cups-1.4.2/cgi-bin/admin.c
+--- cups-1.4.2/cgi-bin/admin.c.str3406-and-r8951	2014-04-02 11:15:53.488749732 +0100
++++ cups-1.4.2/cgi-bin/admin.c	2014-04-02 12:25:04.627687259 +0100
+@@ -52,9 +52,7 @@
+  * Local globals...
+  */
+ 
+-static int	current_device;		/* Current device for add/modify */
+-static time_t	last_device_time;	/* Last update time for device list */
+-
++static int	current_device = 0 ;     /* Current device shown */
+ 
+ /*
+  * Local functions...
+@@ -292,6 +290,20 @@ choose_device_cb(
+     const char *device_location,	/* I - Location */
+     const char *title)			/* I - Page title */
+ {
++  /*
++   * For modern browsers, start a multi-part page so we can show that something
++   * is happening.  Non-modern browsers just get everything at the end...
++   */
++
++  if (current_device == 0 && cgiSupportsMultipart())
++    {
++      cgiStartMultipart();
++      cgiStartHTML(title);
++      cgiCopyTemplateLang("choose-device.tmpl");
++      cgiEndHTML();
++      fflush(stdout);
++    }
++
+  /*
+   * Add the device to the array...
+   */
+@@ -304,23 +316,6 @@ choose_device_cb(
+   cgiSetArray("device_location", current_device, device_location);
+ 
+   current_device ++;
+-
+-  if (time(NULL) > last_device_time && cgiSupportsMultipart())
+-  {
+-   /*
+-    * Update the page...
+-    */
+-
+-    if (!last_device_time)
+-      cgiStartMultipart();
+-
+-    cgiStartHTML(title);
+-    cgiCopyTemplateLang("choose-device.tmpl");
+-    cgiEndHTML();
+-    fflush(stdout);
+-
+-    time(&last_device_time);
+-  }
+ }
+ 
+ 
+@@ -1001,13 +996,11 @@ do_am_printer(http_t *http,		/* I - HTTP
+     }
+ 
+    /*
+-    * Scan for devices for up to 30 seconds, updating the page as we find
+-    * them...
++    * Scan for devices for up to 30 seconds...
+     */
+ 
+     fputs("DEBUG: Getting list of devices...\n", stderr);
+ 
+-    last_device_time = 0;
+     current_device   = 0;
+     if (cupsGetDevices(http, 30, CUPS_INCLUDE_ALL, CUPS_EXCLUDE_NONE,
+                        (cups_device_cb_t)choose_device_cb,
+@@ -1015,17 +1008,17 @@ do_am_printer(http_t *http,		/* I - HTTP
+     {
+       fputs("DEBUG: Got device list!\n", stderr);
+ 
+-      if (!cgiSupportsMultipart())
+-      {
+-       /*
+-        * Non-modern browsers that don't support multi-part documents get
+-	* everything at the end...
+-	*/
++      if (cgiSupportsMultipart())
++        cgiStartMultipart();
++
++      cgiSetVariable("CUPS_GET_DEVICES_DONE", "1");
++      cgiStartHTML(title);
++      cgiCopyTemplateLang("choose-device.tmpl");
++      cgiEndHTML();
++
++      if (cgiSupportsMultipart())
++        cgiEndMultipart();
+ 
+-	cgiStartHTML(title);
+-	cgiCopyTemplateLang("choose-device.tmpl");
+-	cgiEndHTML();
+-      }
+     }
+     else
+     {
+@@ -1046,16 +1039,6 @@ do_am_printer(http_t *http,		/* I - HTTP
+         return;
+       }
+     }
+-
+-   /*
+-    * Show the final selection page...
+-    */
+-
+-    cgiSetVariable("CUPS_GET_DEVICES_DONE", "1");
+-    cgiStartHTML(title);
+-    cgiCopyTemplateLang("choose-device.tmpl");
+-    cgiEndHTML();
+-    cgiEndMultipart();
+   }
+   else if (strchr(var, '/') == NULL)
+   {

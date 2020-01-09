@@ -1,0 +1,20 @@
+diff -up cups-1.4.2/scheduler/ipp.c.send_document-crash cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.send_document-crash	2015-01-23 16:29:49.039895863 +0000
++++ cups-1.4.2/scheduler/ipp.c	2015-01-23 16:29:49.050895920 +0000
+@@ -9788,6 +9788,16 @@ send_document(cupsd_client_t  *con,	/* I
+ 
+   printer = cupsdFindDest(job->dest);
+ 
++ /* 
++  * Make sure that the printer still exists.
++  */
++
++  if (!printer)
++  {
++    send_ipp_status(con, IPP_NOT_FOUND, _("Printer \"%s\" does not exist!"), job->dest);
++    return;
++  }
++
+  /*
+   * See if the job is owned by the requesting user...
+   */

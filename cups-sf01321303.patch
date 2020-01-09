@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/scheduler/main.c.sf01321303 cups-1.4.2/scheduler/main.c
+--- cups-1.4.2/scheduler/main.c.sf01321303	2015-02-18 13:54:07.157277318 +0000
++++ cups-1.4.2/scheduler/main.c	2015-02-18 13:58:06.280706432 +0000
+@@ -1749,7 +1749,7 @@ process_children(void)
+ 	* filters are done, and if so move to the next file.
+ 	*/
+ 
+-	if (job->current_file < job->num_files)
++	if (job->current_file < job->num_files && job->printer)
+ 	{
+ 	  for (i = 0; job->filters[i] < 0; i ++);
+ 

@@ -1,0 +1,169 @@
+diff -up cups-1.4.2/notifier/rss.c.str4461 cups-1.4.2/notifier/rss.c
+--- cups-1.4.2/notifier/rss.c.str4461	2009-02-16 23:57:08.000000000 +0000
++++ cups-1.4.2/notifier/rss.c	2014-09-01 17:00:16.582784783 +0100
+@@ -1,27 +1,16 @@
+ /*
+  * "$Id: rss.c 8359 2009-02-16 23:57:08Z mike $"
+  *
+- *   RSS notifier for the Common UNIX Printing System (CUPS).
++ * RSS notifier for CUPS.
+  *
+- *   Copyright 2007-2009 by Apple Inc.
+- *   Copyright 2007 by Easy Software Products.
++ * Copyright 2007-2014 by Apple Inc.
++ * Copyright 2007 by Easy Software Products.
+  *
+- *   These coded instructions, statements, and computer programs are the
+- *   property of Apple Inc. and are protected by Federal copyright
+- *   law.  Distribution and use rights are outlined in the file "LICENSE.txt"
+- *   which should have been included with this file.  If this file is
+- *   file is missing or damaged, see the license at "http://www.cups.org/".
+- *
+- * Contents:
+- *
+- *   main()           - Main entry for the test notifier.
+- *   compare_rss()    - Compare two messages.
+- *   delete_message() - Free all memory used by a message.
+- *   load_rss()       - Load an existing RSS feed file.
+- *   new_message()    - Create a new RSS message.
+- *   password_cb()    - Return the cached password.
+- *   save_rss()       - Save messages to a RSS file.
+- *   xml_escape()     - Copy a string, escaping &, <, and > as needed.
++ * These coded instructions, statements, and computer programs are the
++ * property of Apple Inc. and are protected by Federal copyright
++ * law.  Distribution and use rights are outlined in the file "LICENSE.txt"
++ * which should have been included with this file.  If this file is
++ * file is missing or damaged, see the license at "http://www.cups.org/".
+  */
+ 
+ /*
+@@ -29,6 +18,7 @@
+  */
+ 
+ #include <cups/cups.h>
++#include <sys/stat.h>
+ #include <cups/language.h>
+ #include <cups/string.h>
+ #include <cups/array.h>
+@@ -620,6 +610,8 @@ save_rss(cups_array_t *rss,		/* I - RSS
+     return (0);
+   }
+ 
++  fchmod(fileno(fp), 0644);
++
+   fputs("<?xml version=\"1.0\"?>\n", fp);
+   fputs("<rss version=\"2.0\">\n", fp);
+   fputs("  <channel>\n", fp);
+diff -up cups-1.4.2/scheduler/client.c.str4461 cups-1.4.2/scheduler/client.c
+--- cups-1.4.2/scheduler/client.c.str4461	2014-09-01 17:00:16.581784778 +0100
++++ cups-1.4.2/scheduler/client.c	2014-09-01 17:00:54.365984429 +0100
+@@ -3514,6 +3514,7 @@ get_file(cupsd_client_t *con,		/* I  - C
+   char		*ptr;			/* Pointer info filename */
+   int		plen;			/* Remaining length after pointer */
+   char		language[7];		/* Language subdirectory, if any */
++  int		perm_check = 1;		/* Do permissions check? */
+ 
+ 
+  /*
+@@ -3523,11 +3524,19 @@ get_file(cupsd_client_t *con,		/* I  - C
+   language[0] = '\0';
+ 
+   if (!strncmp(con->uri, "/ppd/", 5))
++  {
+     snprintf(filename, len, "%s%s", ServerRoot, con->uri);
++
++    perm_check = 0;
++  }
+   else if (!strncmp(con->uri, "/rss/", 5) && !strchr(con->uri + 5, '/'))
+     snprintf(filename, len, "%s/rss/%s", CacheDir, con->uri + 5);
+-  else if (!strncmp(con->uri, "/admin/conf/", 12))
+-    snprintf(filename, len, "%s%s", ServerRoot, con->uri + 11);
++  else if (!strcmp(con->uri, "/admin/conf/cupsd.conf"))
++  {
++    strlcpy(filename, ConfigurationFile, len);
++
++    perm_check = 0;
++  }
+   else if (!strncmp(con->uri, "/admin/log/", 11))
+   {
+     if (!strncmp(con->uri + 11, "access_log", 10) && AccessLog[0] == '/')
+@@ -3538,6 +3547,8 @@ get_file(cupsd_client_t *con,		/* I  - C
+       strlcpy(filename, PageLog, len);
+     else
+       return (NULL);
++
++    perm_check = 0;
+   }
+   else if (con->language)
+   {
+@@ -3601,7 +3612,7 @@ get_file(cupsd_client_t *con,		/* I  - C
+   * not allow access...
+   */
+ 
+-  if (!status && !(filestats->st_mode & S_IROTH))
++  if (!status && perm_check && !(filestats->st_mode & S_IROTH))
+   {
+     cupsdLogMessage(CUPSD_LOG_INFO, "[Client %d] Files/directories such as \"%s\" must be world-readable.", con->http.fd, filename);
+     return (NULL);
+@@ -3709,7 +3720,7 @@ get_file(cupsd_client_t *con,		/* I  - C
+     * not allow access...
+     */
+ 
+-    if (!status && !(filestats->st_mode & S_IROTH))
++    if (!status && perm_check && !(filestats->st_mode & S_IROTH))
+     {
+       cupsdLogMessage(CUPSD_LOG_INFO, "[Client %d] Files/directories such as \"%s\" must be world-readable.", con->http.fd, filename);
+       return (NULL);
+diff -up cups-1.4.2/scheduler/conf.c.str4461 cups-1.4.2/scheduler/conf.c
+--- cups-1.4.2/scheduler/conf.c.str4461	2014-09-01 17:00:16.575784746 +0100
++++ cups-1.4.2/scheduler/conf.c	2014-09-01 17:00:16.584784793 +0100
+@@ -973,7 +973,7 @@ cupsdReadConfiguration(void)
+ 
+   if ((cupsdCheckPermissions(RequestRoot, NULL, 0710, RunUser,
+ 			     Group, 1, 1) < 0 ||
+-       cupsdCheckPermissions(CacheDir, NULL, 0775, RunUser,
++       cupsdCheckPermissions(CacheDir, NULL, 0770, RunUser,
+ 			     Group, 1, 1) < 0 ||
+        cupsdCheckPermissions(temp, NULL, 0775, RunUser,
+ 			     Group, 1, 1) < 0 ||
+diff -up cups-1.4.2/scheduler/ipp.c.str4461 cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.str4461	2014-09-01 17:00:16.546784593 +0100
++++ cups-1.4.2/scheduler/ipp.c	2014-09-01 17:00:16.585784799 +0100
+@@ -2791,7 +2791,6 @@ add_printer(cupsd_client_t  *con,	/* I -
+ 
+ 	cupsdLogMessage(CUPSD_LOG_DEBUG,
+ 			"Copied PPD file successfully!");
+-	chmod(dstfile, 0644);
+       }
+       else
+       {
+@@ -5296,7 +5295,7 @@ copy_model(cupsd_client_t *con,		/* I -
+   * Open the destination file for a copy...
+   */
+ 
+-  if ((dst = cupsFileOpen(to, "wb")) == NULL)
++  if ((dst = cupsdCreateConfFile(to, ConfigFilePerm)) == NULL)
+   {
+     cupsFreeOptions(num_defaults, defaults);
+     cupsFileClose(src);
+@@ -5349,7 +5348,7 @@ copy_model(cupsd_client_t *con,		/* I -
+ 
+   unlink(tempfile);
+ 
+-  return (cupsFileClose(dst));
++  return (cupsdCloseCreatedConfFile(dst, to));
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/Makefile.str4461 cups-1.4.2/scheduler/Makefile
+--- cups-1.4.2/scheduler/Makefile.str4461	2014-09-01 17:00:16.556784645 +0100
++++ cups-1.4.2/scheduler/Makefile	2014-09-01 17:00:16.585784799 +0100
+@@ -161,7 +161,7 @@ install-data:
+ 	echo Creating $(REQUESTS)/tmp...
+ 	$(INSTALL_DIR) -m 1770 -g $(CUPS_GROUP) $(REQUESTS)/tmp
+ 	echo Creating $(CACHEDIR)...
+-	$(INSTALL_DIR) -m 775 -g $(CUPS_GROUP) $(CACHEDIR)
++	$(INSTALL_DIR) -m 770 -g $(CUPS_GROUP) $(CACHEDIR)
+ 
+ 
+ #

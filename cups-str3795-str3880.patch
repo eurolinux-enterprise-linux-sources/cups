@@ -1,0 +1,43 @@
+diff -up cups-1.4.2/scheduler/job.c.str3795-str3880 cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.str3795-str3880	2011-09-06 18:37:43.779764205 +0200
++++ cups-1.4.2/scheduler/job.c	2011-09-06 18:43:31.402813931 +0200
+@@ -1296,6 +1296,9 @@ void
+ cupsdDeleteJob(cupsd_job_t       *job,	/* I - Job */
+                cupsd_jobaction_t action)/* I - Action */
+ {
++  char	filename[1024];			/* Job filename */
++
++
+   if (job->printer)
+     finalize_job(job);
+ 
+@@ -1305,8 +1308,6 @@ cupsdDeleteJob(cupsd_job_t       *job,	/
+     * Remove the job info file...
+     */
+ 
+-    char	filename[1024];		/* Job filename */
+-
+     snprintf(filename, sizeof(filename), "%s/c%05d", RequestRoot,
+ 	     job->id);
+     unlink(filename);
+@@ -1337,7 +1338,19 @@ cupsdDeleteJob(cupsd_job_t       *job,	/
+     free(job->compressions);
+     free(job->filetypes);
+ 
+-    job->num_files = 0;
++    if (action == CUPSD_JOB_PURGE)
++    {
++      while (job->num_files > 0)
++      {
++	snprintf(filename, sizeof(filename), "%s/d%05d-%03d", RequestRoot,
++		 job->id, job->num_files);
++	unlink(filename);
++
++	job->num_files --;
++      }
++    }
++    else
++      job->num_files = 0;
+   }
+ 
+   if (job->history)

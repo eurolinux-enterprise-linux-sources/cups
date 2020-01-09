@@ -1,0 +1,17 @@
+diff -up cups-1.4.2/doc/help/network.html.str4569 cups-1.4.2/doc/help/network.html
+--- cups-1.4.2/doc/help/network.html.str4569	2009-05-13 22:39:17.000000000 +0100
++++ cups-1.4.2/doc/help/network.html	2015-02-03 12:44:55.754571904 +0000
+@@ -260,11 +260,11 @@ lpd://<i>username@ip-address-or-hostname
+ </TR>
+ <TR>
+ 	<TD><TT>sanitize_title=no</TT></TD>
+-	<TD>Specifies that the job title string should not be restricted to ASCII characters.</TD>
++	<TD>Specifies that the job title string should not be restricted to ASCII alphanumeric and space characters.</TD>
+ </TR>
+ <TR>
+ 	<TD><TT>sanitize_title=yes</TT></TD>
+-	<TD>Specifies that the job title string should be restricted to ASCII characters.</TD>
++	<TD>Specifies that the job title string should be restricted to ASCII alphanumeric and space characters.</TD>
+ </TR>
+ <TR>
+ 	<TD><TT>timeout=<I>seconds</I></TT></TD>

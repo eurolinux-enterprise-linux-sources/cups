@@ -1,0 +1,21 @@
+diff -Napur cups-1.4.2.old/scheduler/auth.c cups-1.4.2.new/scheduler/auth.c
+--- cups-1.4.2.old/scheduler/auth.c	2012-06-20 12:42:09.966081552 -0700
++++ cups-1.4.2.new/scheduler/auth.c	2012-06-20 16:33:37.981699334 -0700
+@@ -2344,7 +2344,7 @@ cupsdIsAuthorized(cupsd_client_t *con,	/
+ 	  return (HTTP_OK);
+       }
+ 
+-      return (HTTP_FORBIDDEN);
++      return (con->username[0] ? HTTP_FORBIDDEN : HTTP_UNAUTHORIZED);
+     }
+ #endif /* HAVE_AUTHORIZATION_H */
+ 
+@@ -2368,7 +2368,7 @@ cupsdIsAuthorized(cupsd_client_t *con,	/
+         return (HTTP_OK);
+     }
+ 
+-    return (HTTP_FORBIDDEN);
++    return (con->username[0] ? HTTP_FORBIDDEN : HTTP_UNAUTHORIZED);
+   }
+ 
+  /*

@@ -1,0 +1,16 @@
+diff -Napur cups-1.4.2.bz1293498.old/scheduler/job.c cups-1.4.2.bz1293498.new/scheduler/job.c
+--- cups-1.4.2.bz1293498.old/scheduler/job.c	2015-12-22 10:05:11.912607612 -0800
++++ cups-1.4.2.bz1293498.new/scheduler/job.c	2015-12-22 10:16:36.187283997 -0800
+@@ -2988,6 +2988,12 @@ finalize_job(cupsd_job_t *job)		/* I - J
+   job->profile = NULL;
+ 
+  /*
++  * Clear the unresponsive job watchdog timer...
++  */
++
++  job->kill_time   = 0;
++
++ /*
+   * Close pipes and status buffer...
+   */
+ 

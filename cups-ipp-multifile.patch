@@ -1,0 +1,23 @@
+diff -up cups-1.4.2/backend/ipp.c.ipp-multifile cups-1.4.2/backend/ipp.c
+--- cups-1.4.2/backend/ipp.c.ipp-multifile	2013-08-07 11:47:52.632344879 +0100
++++ cups-1.4.2/backend/ipp.c	2013-08-07 11:49:30.133999185 +0100
+@@ -1198,11 +1198,15 @@ main(int  argc,				/* I - Number of comm
+ 	  ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_NAME,
+                        "requesting-user-name", NULL, argv[2]);
+ 
+-        if ((i + 1) == num_files)
+-	  ippAddBoolean(request, IPP_TAG_OPERATION, "last-document", 1);
++        ippAddBoolean(request, IPP_TAG_OPERATION, "last-document",
++        	      (i + 1) >= num_files);
+ 
+-        ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_MIMETYPE,
+-	             "document-format", NULL, content_type);
++        if (num_files > 1)
++          ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_MIMETYPE,
++		       "document-format", NULL, "application/octet-stream");
++        else
++          ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_MIMETYPE,
++		       "document-format", NULL, content_type);
+ 
+ 	if (http->version < HTTP_1_1)
+ 	  httpReconnect(http);

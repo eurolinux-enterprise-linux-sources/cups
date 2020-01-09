@@ -1,0 +1,23 @@
+diff -up cups-1.4.2/scheduler/job.c.banner-notime cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.banner-notime	2016-09-22 17:51:27.220162251 +0200
++++ cups-1.4.2/scheduler/job.c	2016-09-22 17:54:39.283745612 +0200
+@@ -3370,8 +3370,7 @@ get_options(cupsd_job_t *job,		/* I - Jo
+ 	  attr->value_tag == IPP_TAG_BEGIN_COLLECTION) /* Not yet supported */
+ 	continue;
+ 
+-      if (!strncmp(attr->name, "time-", 5) ||
+-          !strcmp(attr->name, "job-hold-until"))
++      if (!strcmp(attr->name, "job-hold-until"))
+ 	continue;
+ 
+       if (!strncmp(attr->name, "job-", 4) &&
+@@ -3527,9 +3526,6 @@ ipp_length(ipp_t *ipp)			/* I - IPP requ
+ 	attr->value_tag == IPP_TAG_URISCHEME)
+       continue;
+ 
+-    if (strncmp(attr->name, "time-", 5) == 0)
+-      continue;
+-
+    /*
+     * Add space for a leading space and commas between each value.
+     * For the first attribute, the leading space isn't used, so the

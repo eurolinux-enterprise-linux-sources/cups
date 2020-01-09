@@ -1,0 +1,41 @@
+diff -up cups-1.4.2/cups/ipp.c.implicit-class cups-1.4.2/cups/ipp.c
+--- cups-1.4.2/cups/ipp.c.implicit-class	2016-09-22 18:10:27.722722906 +0200
++++ cups-1.4.2/cups/ipp.c	2016-09-22 18:15:00.673698351 +0200
+@@ -2688,6 +2688,7 @@ ipp_attribute_t *			/* O - New attribute
+ _ippAddAttr(ipp_t *ipp,			/* I - IPP message */
+             int   num_values)		/* I - Number of values */
+ {
++  int	alloc_values;
+   ipp_attribute_t	*attr;		/* New attribute */
+ 
+ 
+@@ -2696,19 +2697,24 @@ _ippAddAttr(ipp_t *ipp,			/* I - IPP mes
+   if (!ipp || num_values < 0)
+     return (NULL);
+ 
++  if (num_values <= 1)
++    alloc_values = 1;
++  else
++    alloc_values = (num_values + IPP_MAX_VALUES - 1) & ~(IPP_MAX_VALUES - 1);
+   attr = calloc(sizeof(ipp_attribute_t) +
+-                (num_values - 1) * sizeof(ipp_value_t), 1);
++                (alloc_values - 1) * sizeof(ipp_value_t), 1);
+ 
+   if (attr != NULL)
+   {
+     attr->num_values = num_values;
+ 
+-    if (ipp->last == NULL)
+-      ipp->attrs = attr;
+-    else
++    if (ipp->last)
+       ipp->last->next = attr;
++    else
++      ipp->attrs = attr;
+ 
+-    ipp->last = attr;
++    ipp->prev = ipp->last;
++    ipp->last = ipp->current = attr;
+   }
+ 
+   DEBUG_printf(("5_ippAddAttr: Returning %p", attr));

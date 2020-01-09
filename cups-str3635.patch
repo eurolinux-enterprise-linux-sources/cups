@@ -1,0 +1,9 @@
+diff -up cups-1.4.2/templates/de/search.tmpl.str3635 cups-1.4.2/templates/de/search.tmpl
+--- cups-1.4.2/templates/de/search.tmpl.str3635	2009-04-03 16:55:28.000000000 +0100
++++ cups-1.4.2/templates/de/search.tmpl	2012-05-21 17:06:46.752188137 +0100
+@@ -1,4 +1,4 @@
+-<FORM ACTION="{THIS_URL}" METHOD="GET">
++<FORM ACTION="/{SECTION}/{?SEARCH_DEST}" METHOD="GET">
+ {WHICH_JOBS?<INPUT TYPE="HIDDEN" NAME="WHICH_JOBS" VALUE="{WHICH_JOBS}">:}
+ {ORDER?<INPUT TYPE="HIDDEN" NAME="ORDER" VALUE="{ORDER}">:}
+ 

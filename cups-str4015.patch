@@ -1,0 +1,44 @@
+diff -up cups-1.4.2/berkeley/lpr.c.str4015 cups-1.4.2/berkeley/lpr.c
+--- cups-1.4.2/berkeley/lpr.c.str4015	2012-03-19 13:53:32.304218429 +0100
++++ cups-1.4.2/berkeley/lpr.c	2012-03-19 13:54:44.367217668 +0100
+@@ -439,11 +439,17 @@ main(int  argc,				/* I - Number of comm
+       _cupsLangPrintf(stderr,
+ 		      _("%s: Error - unable to queue from stdin - %s\n"),
+ 		      argv[0], httpStatus(status));
++      cupsFinishDocument(CUPS_HTTP_DEFAULT, printer);
++      cupsCancelJob2(CUPS_HTTP_DEFAULT, printer, job_id, 0);
+       return (1);
+     }
+ 
+     if (cupsFinishDocument(CUPS_HTTP_DEFAULT, printer) != IPP_OK)
+-      job_id = 0;
++    {
++      _cupsLangPrintf(stderr, "%s: %s\n", argv[0], cupsLastErrorString());
++      cupsCancelJob2(CUPS_HTTP_DEFAULT, printer, job_id, 0);
++      return (1);
++    }
+   }
+ 
+   if (job_id < 1)
+diff -up cups-1.4.2/systemv/lp.c.str4015 cups-1.4.2/systemv/lp.c
+--- cups-1.4.2/systemv/lp.c.str4015	2008-11-18 01:42:34.000000000 +0100
++++ cups-1.4.2/systemv/lp.c	2012-03-19 13:54:15.881218158 +0100
+@@ -644,11 +644,17 @@ main(int  argc,				/* I - Number of comm
+       _cupsLangPrintf(stderr,
+ 		      _("%s: Error - unable to queue from stdin - %s\n"),
+ 		      argv[0], httpStatus(status));
++      cupsFinishDocument(CUPS_HTTP_DEFAULT, printer);
++      cupsCancelJob2(CUPS_HTTP_DEFAULT, printer, job_id, 0);
+       return (1);
+     }
+ 
+     if (cupsFinishDocument(CUPS_HTTP_DEFAULT, printer) != IPP_OK)
+-      job_id = 0;
++    {
++      _cupsLangPrintf(stderr, "%s: %s\n", argv[0], cupsLastErrorString());
++      cupsCancelJob2(CUPS_HTTP_DEFAULT, printer, job_id, 0);
++      return (1);
++    }
+   }
+ 
+   if (job_id < 1)

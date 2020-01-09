@@ -1,0 +1,27 @@
+diff -up cups-1.4.2/cgi-bin/var.c.str4619 cups-1.4.2/cgi-bin/var.c
+--- cups-1.4.2/cgi-bin/var.c.str4619	2015-04-15 15:42:21.274329351 +0100
++++ cups-1.4.2/cgi-bin/var.c	2015-04-15 15:42:28.629262141 +0100
+@@ -685,7 +685,7 @@ cgi_initialize_cookies(void)
+         if (ptr < (value + sizeof(value) - 1))
+ 	  *ptr++ = *cookie++;
+ 	else
+-	  break;
++	  cookie++;
+ 
+       if (*cookie == '\"')
+         cookie ++;
+@@ -696,13 +696,11 @@ cgi_initialize_cookies(void)
+         if (ptr < (value + sizeof(value) - 1))
+ 	  *ptr++ = *cookie++;
+ 	else
+-	  break;
++	  cookie ++;
+     }
+ 
+     if (*cookie == ';')
+       cookie ++;
+-    else if (*cookie)
+-      break;
+ 
+     *ptr = '\0';
+ 

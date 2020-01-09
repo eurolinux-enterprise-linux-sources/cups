@@ -1,0 +1,6397 @@
+diff -up cups-1.4.2/data/iso-8859-10.undo-str2537 cups-1.4.2/data/iso-8859-10
+--- cups-1.4.2/data/iso-8859-10.undo-str2537	2010-10-13 15:25:53.574862650 +0100
++++ cups-1.4.2/data/iso-8859-10	2010-10-13 15:25:53.574862650 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-10
++# (Latin6/Nordic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 0104
++A2 0112
++A3 0122
++A4 012A
++A5 0128
++A6 0136
++A7 00A7
++A8 013B
++A9 0110
++AA 0160
++AB 0166
++AC 017D
++AD 00AD
++AE 016A
++AF 014A
++B0 00B0
++B1 0105
++B2 0113
++B3 0123
++B4 012B
++B5 0129
++B6 0137
++B7 00B7
++B8 013C
++B9 0111
++BA 0161
++BB 0167
++BC 017E
++BD 2015
++BE 016B
++BF 014B
++C0 0100
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 012E
++C8 010C
++C9 00C9
++CA 0118
++CB 00CB
++CC 0116
++CD 00CD
++CE 00CE
++CF 00CF
++D0 0110
++D1 0145
++D2 014C
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 0168
++D8 00D8
++D9 0172
++DA 00DA
++DB 00DB
++DC 00DC
++DD 00DD
++DE 00DE
++DF 00DF
++E0 0101
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 012F
++E8 010D
++E9 00E9
++EA 0119
++EB 00EB
++EC 0117
++ED 00ED
++EE 00EE
++EF 00EF
++F0 00F0
++F1 0146
++F2 014D
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 0169
++F8 00F8
++F9 0173
++FA 00FA
++FB 00FB
++FC 00FC
++FD 00FD
++FE 00FD
++FF 0138
+diff -up cups-1.4.2/data/iso-8859-13.undo-str2537 cups-1.4.2/data/iso-8859-13
+--- cups-1.4.2/data/iso-8859-13.undo-str2537	2010-10-13 15:25:53.575864857 +0100
++++ cups-1.4.2/data/iso-8859-13	2010-10-13 15:25:53.575864857 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-13
++# (Latin7/Baltic Rim) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 201D
++A2 00A2
++A3 00A3
++A4 00A4
++A5 201E
++A6 00A6
++A7 00A7
++A8 00D8
++A9 00A9
++AA 0156
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00C6
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 201C
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00F8
++B9 00B9
++BA 0157
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00E6
++C0 0104
++C1 012E
++C2 0100
++C3 0106
++C4 00C4
++C5 00C5
++C6 0118
++C7 0112
++C8 010C
++C9 00C9
++CA 0179
++CB 0116
++CC 0122
++CD 0136
++CE 012A
++CF 013B
++D0 0160
++D1 0143
++D2 0145
++D3 00D3
++D4 014C
++D5 00D5
++D6 00D6
++D7 00D7
++D8 0172
++D9 0141
++DA 015A
++DB 016A
++DC 00DC
++DD 017B
++DE 017D
++DF 00DF
++E0 0105
++E1 012F
++E2 0101
++E3 0107
++E4 00E4
++E5 00E5
++E6 0119
++E7 0113
++E8 010D
++E9 00E9
++EA 017A
++EB 0117
++EC 0123
++ED 0137
++EE 012B
++EF 013C
++F0 0161
++F1 0144
++F2 0146
++F3 00F3
++F4 014D
++F5 00F5
++F6 00F6
++F7 00F7
++F8 0173
++F9 0142
++FA 015B
++FB 016B
++FC 00FC
++FD 017C
++FE 017E
++FF 2019
+diff -up cups-1.4.2/data/iso-8859-14.undo-str2537 cups-1.4.2/data/iso-8859-14
+--- cups-1.4.2/data/iso-8859-14.undo-str2537	2010-10-13 15:25:53.575864857 +0100
++++ cups-1.4.2/data/iso-8859-14	2010-10-13 15:25:53.575864857 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-14
++# (Latin8/Celtic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 1E02
++A2 1E03
++A3 00A3
++A4 010A
++A5 010B
++A6 1E0A
++A7 00A7
++A8 1E80
++A9 00A9
++AA 1E82
++AB 1E0B
++AC 1EF2
++AD 00AD
++AE 00AE
++AF 0178
++B0 1E1E
++B1 1E1F
++B2 0120
++B3 0121
++B4 1E40
++B5 1E41
++B6 00B6
++B7 1E56
++B8 1E81
++B9 1E57
++BA 1E83
++BB 1E60
++BC 1EF3
++BD 1E84
++BE 1E85
++BF 1E61
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 0174
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 1E6A
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 00DD
++DE 0176
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 0175
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 1E6B
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 00FD
++FE 0177
++FF 00FF
+diff -up cups-1.4.2/data/iso-8859-15.undo-str2537 cups-1.4.2/data/iso-8859-15
+--- cups-1.4.2/data/iso-8859-15.undo-str2537	2010-10-13 15:25:53.576863535 +0100
++++ cups-1.4.2/data/iso-8859-15	2010-10-13 15:25:53.576863535 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-15
++# (Latin9/West Europe + Euro) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 20AC
++A5 00A5
++A6 0160
++A7 00A7
++A8 0161
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 017D
++B5 00B5
++B6 00B6
++B7 00B7
++B8 017E
++B9 00B9
++BA 00BA
++BB 00BB
++BC 0152
++BD 0153
++BE 0178
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 00D0
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 00DD
++DE 00DE
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 00F0
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 00FD
++FE 00FE
++FF 00FF
+diff -up cups-1.4.2/data/iso-8859-1.undo-str2537 cups-1.4.2/data/iso-8859-1
+--- cups-1.4.2/data/iso-8859-1.undo-str2537	2010-10-13 15:25:53.583863133 +0100
++++ cups-1.4.2/data/iso-8859-1	2010-10-13 15:25:53.583863133 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-1
++# (Latin1/West European) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00BA
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 00D0
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 00DD
++DE 00DE
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 00F0
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 00FD
++FE 00FE
++FF 00FF
+diff -up cups-1.4.2/data/iso-8859-2.undo-str2537 cups-1.4.2/data/iso-8859-2
+--- cups-1.4.2/data/iso-8859-2.undo-str2537	2010-10-13 15:25:53.583863133 +0100
++++ cups-1.4.2/data/iso-8859-2	2010-10-13 15:25:53.584863562 +0100
+@@ -0,0 +1,253 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-2
++# (Latin2/East European) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++84 201E
++85 2026
++86 2020
++87 2021
++89 2030
++8A 0160
++8B 2039
++8C 015A
++8D 0164
++8E 017D
++8F 0179
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++99 2122
++9A 0161
++9B 203A
++8C 015B
++8D 0165
++8E 017E
++8F 017A
++A0 00A0
++A1 0104
++A2 02D8
++A3 0141
++A4 00A4
++A5 013D
++A6 015A
++A7 00A7
++A8 00A8
++A9 0160
++AA 015E
++AB 0164
++AC 0179
++AD 00AD
++AE 017D
++AF 017B
++B0 00B0
++B1 0105
++B2 02DB
++B3 0142
++B4 00B4
++B5 013E
++B6 015B
++B7 02C7
++B8 00B8
++B9 0161
++BA 015F
++BB 0165
++BC 017A
++BD 02DD
++BE 017E
++BF 017C
++C0 0154
++C1 00C1
++C2 00C2
++C3 0102
++C4 00C4
++C5 0139
++C6 0106
++C7 00C7
++C8 010C
++C9 00C9
++CA 0118
++CB 00CB
++CC 011A
++CD 00CD
++CE 00CE
++CF 010E
++D0 0110
++D1 0143
++D2 0147
++D3 00D3
++D4 00D4
++D5 0150
++D6 00D6
++D7 00D7
++D8 0158
++D9 016E
++DA 00DA
++DB 0170
++DC 00DC
++DD 00DD
++DE 0162
++DF 00DF
++E0 0155
++E1 00E1
++E2 00E2
++E3 0103
++E4 00E4
++E5 013A
++E6 0107
++E7 00E7
++E8 010D
++E9 00E9
++EA 0119
++EB 00EB
++EC 011B
++ED 00ED
++EE 00EE
++EF 010F
++F0 0111
++F1 0144
++F2 0148
++F3 00F3
++F4 00F4
++F5 0151
++F6 00F6
++F7 00F7
++F8 0159
++F9 016F
++FA 00FA
++FB 0171
++FC 00FC
++FD 00FD
++FE 0163
++FF 02D9
+diff -up cups-1.4.2/data/iso-8859-3.undo-str2537 cups-1.4.2/data/iso-8859-3
+--- cups-1.4.2/data/iso-8859-3.undo-str2537	2010-10-13 15:25:53.584863562 +0100
++++ cups-1.4.2/data/iso-8859-3	2010-10-13 15:25:53.584863562 +0100
+@@ -0,0 +1,244 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-3
++# (Latin3/South European) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 0126
++A2 02D8
++A3 00A3
++A4 00A4
++A6 0124
++A7 00A7
++A8 00A8
++A9 0130
++AA 015E
++AB 011E
++AC 0134
++AD 00AD
++AF 017B
++B0 00B0
++B1 0127
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 0125
++B7 00B7
++B8 00B8
++B9 0131
++BA 015F
++BB 011F
++BC 0135
++BD 00BD
++BF 017C
++C0 00C0
++C1 00C1
++C2 00C2
++C4 00C4
++C5 010A
++C6 0108
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 0120
++D6 00D6
++D7 00D7
++D8 011C
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 016C
++DE 015C
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E4 00E4
++E5 010B
++E6 0109
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 0121
++F6 00F6
++F7 00F7
++F8 011D
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 016D
++FE 015D
++FF 02D9
+diff -up cups-1.4.2/data/iso-8859-4.undo-str2537 cups-1.4.2/data/iso-8859-4
+--- cups-1.4.2/data/iso-8859-4.undo-str2537	2010-10-13 15:25:53.585863232 +0100
++++ cups-1.4.2/data/iso-8859-4	2010-10-13 15:25:53.585863232 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-4
++# (Latin4/North European) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 0104
++A2 0138
++A3 0156
++A4 00A4
++A5 0128
++A6 013B
++A7 00A7
++A8 00A8
++A9 0160
++AA 0112
++AB 0122
++AC 0166
++AD 00AD
++AE 017D
++AF 00AF
++B0 00B0
++B1 0105
++B2 02DB
++B3 0157
++B4 00B4
++B5 0129
++B6 013C
++B7 02C7
++B8 00B8
++B9 0161
++BA 0113
++BB 0123
++BC 0167
++BD 014A
++BE 017E
++BF 014B
++C0 0100
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 012E
++C8 010C
++C9 00C9
++CA 0118
++CB 00CB
++CC 0116
++CD 00CD
++CE 00CE
++CF 012A
++D0 0110
++D1 0145
++D2 014C
++D3 0136
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 0172
++DA 00DA
++DB 00DB
++DC 00DC
++DD 0168
++DE 016A
++DF 00DF
++E0 0101
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 012F
++E8 010D
++E9 00E9
++EA 0119
++EB 00EB
++EC 0117
++ED 00ED
++EE 00EE
++EF 012B
++F0 0111
++F1 0146
++F2 014D
++F3 0137
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 0173
++FA 00FA
++FB 00FB
++FC 00FC
++FD 0169
++FE 016B
++FF 02D9
+diff -up cups-1.4.2/data/iso-8859-5.undo-str2537 cups-1.4.2/data/iso-8859-5
+--- cups-1.4.2/data/iso-8859-5.undo-str2537	2010-10-13 15:25:53.585863232 +0100
++++ cups-1.4.2/data/iso-8859-5	2010-10-13 15:25:53.586863464 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-5
++# (Cyrillic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 0401
++A2 0402
++A3 0403
++A4 0404
++A5 0405
++A6 0406
++A7 0407
++A8 0408
++A9 0409
++AA 040A
++AB 040B
++AC 040C
++AD 00AD
++AE 040E
++AF 040F
++B0 0410
++B1 0411
++B2 0412
++B3 0413
++B4 0414
++B5 0415
++B6 0416
++B7 0417
++B8 0418
++B9 0419
++BA 041A
++BB 041B
++BC 041C
++BD 041D
++BE 041E
++BF 041F
++C0 0420
++C1 0421
++C2 0422
++C3 0423
++C4 0424
++C5 0425
++C6 0426
++C7 0427
++C8 0428
++C9 0429
++CA 042A
++CB 042B
++CC 042C
++CD 042D
++CE 042E
++CF 042F
++D0 0430
++D1 0431
++D2 0432
++D3 0433
++D4 0434
++D5 0435
++D6 0436
++D7 0437
++D8 0438
++D9 0439
++DA 043A
++DB 043B
++DC 043C
++DD 043D
++DE 043E
++DF 043F
++E0 0440
++E1 0441
++E2 0442
++E3 0443
++E4 0444
++E5 0445
++E6 0446
++E7 0447
++E8 0448
++E9 0449
++EA 044A
++EB 044B
++EC 044C
++ED 044D
++EE 044E
++EF 044F
++F0 2116
++F1 0451
++F2 0452
++F3 0453
++F4 0454
++F5 0455
++F6 0456
++F7 0457
++F8 0458
++F9 0459
++FA 045A
++FB 045B
++FC 045C
++FD 00A7
++FE 045E
++FF 045F
+diff -up cups-1.4.2/data/iso-8859-6.undo-str2537 cups-1.4.2/data/iso-8859-6
+--- cups-1.4.2/data/iso-8859-6.undo-str2537	2010-10-13 15:25:53.586863464 +0100
++++ cups-1.4.2/data/iso-8859-6	2010-10-13 15:25:53.586863464 +0100
+@@ -0,0 +1,206 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-6
++# (Arabic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff rtol single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0660
++31 0661
++32 0662
++33 0663
++34 0664
++35 0665
++36 0666
++37 0667
++38 0668
++39 0669
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A4 00A4
++AC 060C
++AD 00AD
++BB 061B
++BF 061F
++C1 0621
++C2 0622
++C3 0623
++C4 0624
++C5 0625
++C6 0626
++C7 0627
++C8 0628
++C9 0629
++CA 062A
++CB 062B
++CC 062C
++CD 062D
++CE 062E
++CF 062F
++D0 0630
++D1 0631
++D2 0632
++D3 0633
++D4 0634
++D5 0635
++D6 0636
++D7 0637
++D8 0638
++D9 0639
++DA 063A
++E0 0640
++E1 0641
++E2 0642
++E3 0643
++E4 0644
++E5 0645
++E6 0646
++E7 0647
++E8 0648
++E9 0649
++EA 064A
++EB 064B
++EC 064C
++ED 064D
++EE 064E
++EF 064F
++F0 0650
++F1 0651
++F2 0652
+diff -up cups-1.4.2/data/iso-8859-7.undo-str2537 cups-1.4.2/data/iso-8859-7
+--- cups-1.4.2/data/iso-8859-7.undo-str2537	2010-10-13 15:25:53.588864966 +0100
++++ cups-1.4.2/data/iso-8859-7	2010-10-13 15:25:53.588864966 +0100
+@@ -0,0 +1,246 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-7
++# (Greek) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 9f ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++a0 ff ltor single Symbol
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 02BD
++A2 02BC
++A3 00A3
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AB 00AB
++AC 00AC
++AD 00AD
++AF 2015
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 0384
++B5 0385
++B6 0386
++B7 00B7
++B8 0388
++B9 0389
++BA 038A
++BB 00BB
++BC 038C
++BD 00BD
++BE 038E
++BF 038F
++C0 0390
++C1 0391
++C2 0392
++C3 0393
++C4 0394
++C5 0395
++C6 0396
++C7 0397
++C8 0398
++C9 0399
++CA 039A
++CB 039B
++CC 039C
++CD 039D
++CE 039E
++CF 039F
++D0 03A0
++D1 03A1
++D3 03A3
++D4 03A4
++D5 03A5
++D6 03A6
++D7 03A7
++D8 03A8
++D9 03A9
++DA 03AA
++DB 03AB
++DC 03AC
++DD 03AD
++DE 03AE
++DF 03AF
++E0 03B0
++E1 03B1
++E2 03B2
++E3 03B3
++E4 03B4
++E5 03B5
++E6 03B6
++E7 03B7
++E8 03B8
++E9 03B9
++EA 03BA
++EB 03BB
++EC 03BC
++ED 03BD
++EE 03BE
++EF 03BF
++F0 03C0
++F1 03C1
++F2 03C2
++F3 03C3
++F4 03C4
++F5 03C5
++F6 03C6
++F7 03C7
++F8 03C8
++F9 03C9
++FA 03CA
++FB 03CB
++FC 03CC
++FD 03CD
++FE 03CE
+diff -up cups-1.4.2/data/iso-8859-8.undo-str2537 cups-1.4.2/data/iso-8859-8
+--- cups-1.4.2/data/iso-8859-8.undo-str2537	2010-10-13 15:25:53.588864966 +0100
++++ cups-1.4.2/data/iso-8859-8	2010-10-13 15:25:53.588864966 +0100
+@@ -0,0 +1,214 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-8
++# (Hebrew) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 7f ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++80 ff rtol single Courier
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00D7
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 203E
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00F7
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++DF 2017
++E0 05D0
++E1 05D1
++E2 05D2
++E3 05D3
++E4 05D4
++E5 05D5
++E6 05D6
++E7 05D7
++E8 05D8
++E9 05D9
++EA 05DA
++EB 05DB
++EC 05DC
++ED 05DD
++EE 05DE
++EF 05DF
++F0 05E0
++F1 05E1
++F2 05E2
++F3 05E3
++F4 05E4
++F5 05E5
++F6 05E6
++F7 05E7
++F8 05E8
++F9 05E9
++FA 05EA
+diff -up cups-1.4.2/data/iso-8859-9.undo-str2537 cups-1.4.2/data/iso-8859-9
+--- cups-1.4.2/data/iso-8859-9.undo-str2537	2010-10-13 15:25:53.589863654 +0100
++++ cups-1.4.2/data/iso-8859-9	2010-10-13 15:25:53.589863654 +0100
+@@ -0,0 +1,251 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for ISO-8859-9
++# (Latin5/Turkish) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00BA
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 011E
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 0130
++DE 015E
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 011F
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 0131
++FE 015F
++FF 00FF
+diff -up cups-1.4.2/data/koi8-r.undo-str2537 cups-1.4.2/data/koi8-r
+--- cups-1.4.2/data/koi8-r.undo-str2537	2010-10-13 15:25:53.587863214 +0100
++++ cups-1.4.2/data/koi8-r	2010-10-13 15:25:53.587863214 +0100
+@@ -0,0 +1,261 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Russian
++# Code Page KOI8-R text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020             
++21 0021             
++22 0022             
++23 0023             
++24 0024             
++25 0025             
++26 0026             
++27 0027             
++28 0028             
++29 0029             
++2A 002A             
++2B 002B             
++2C 002C             
++2D 002D             
++2E 002E             
++2F 002F             
++30 0030             
++31 0031             
++32 0032             
++33 0033             
++34 0034             
++35 0035             
++36 0036             
++37 0037             
++38 0038             
++39 0039             
++3A 003A             
++3B 003B             
++3C 003C             
++3D 003D             
++3E 003E             
++3F 003F             
++40 0040             
++41 0041             
++42 0042             
++43 0043             
++44 0044             
++45 0045             
++46 0046             
++47 0047             
++48 0048             
++49 0049             
++4A 004A             
++4B 004B             
++4C 004C             
++4D 004D             
++4E 004E             
++4F 004F             
++50 0050             
++51 0051             
++52 0052             
++53 0053             
++54 0054             
++55 0055             
++56 0056             
++57 0057             
++58 0058             
++59 0059             
++5A 005A             
++5B 005B             
++5C 005C             
++5D 005D             
++5E 005E             
++5F 005F             
++60 0060             
++61 0061             
++62 0062             
++63 0063             
++64 0064             
++65 0065             
++66 0066             
++67 0067             
++68 0068             
++69 0069             
++6A 006A             
++6B 006B             
++6C 006C             
++6D 006D             
++6E 006E             
++6F 006F             
++70 0070             
++71 0071             
++72 0072             
++73 0073             
++74 0074             
++75 0075             
++76 0076             
++77 0077             
++78 0078             
++79 0079             
++7A 007A             
++7B 007B             
++7C 007C             
++7D 007D             
++7E 007E             
++7F 007F             
++80 2500             
++81 2502             
++82 250C             
++83 2510             
++84 2514             
++85 2518             
++86 251C             
++87 2524             
++88 252C             
++89 2534             
++8A 253C             
++8B 2580             
++8C 2584             
++8D 2588             
++8E 258C             
++8F 2590             
++90 2591             
++91 2592             
++92 2593             
++93 2320             
++94 25A0             
++95 2219             
++96 221A             
++97 2248             
++98 2264             
++99 2265             
++9A 00A0             
++9B 2321             
++9C 00B0             
++9D 00B2             
++9E 00B7             
++9F 00F7             
++A0 2550             
++A1 2551             
++A2 2552             
++A3 0451             
++A4 2553             
++A5 2554             
++A6 2555             
++A7 2556             
++A8 2557             
++A9 2558             
++AA 2559             
++AB 255A             
++AC 255B             
++AD 255C             
++AE 255D             
++AF 255E             
++B0 255F             
++B1 2560             
++B2 2561             
++B3 0401             
++B4 2562             
++B5 2563             
++B6 2564             
++B7 2565             
++B8 2566             
++B9 2567             
++BA 2568             
++BB 2569             
++BC 256A             
++BD 256B             
++BE 256C             
++BF 00A9             
++C0 044E             
++C1 0430             
++C2 0431             
++C3 0446             
++C4 0434             
++C5 0435             
++C6 0444             
++C7 0433             
++C8 0445             
++C9 0438             
++CA 0439             
++CB 043A             
++CC 043B             
++CD 043C             
++CE 043D             
++CF 043E             
++D0 043F             
++D1 044F             
++D2 0440             
++D3 0441             
++D4 0442             
++D5 0443             
++D6 0436             
++D7 0432             
++D8 044C             
++D9 044B             
++DA 0437             
++DB 0448             
++DC 044D             
++DD 0449             
++DE 0447             
++DF 044A             
++E0 042E             
++E1 0410             
++E2 0411             
++E3 0426             
++E4 0414             
++E5 0415             
++E6 0424             
++E7 0413             
++E8 0425             
++E9 0418             
++EA 0419             
++EB 041A             
++EC 041B             
++ED 041C             
++EE 041D             
++EF 041E             
++F0 041F             
++F1 042F             
++F2 0420             
++F3 0421             
++F4 0422             
++F5 0423             
++F6 0416             
++F7 0412             
++F8 042C             
++F9 042B             
++FA 0417             
++FB 0428             
++FC 042D             
++FD 0429             
++FE 0427             
++FF 042A             
++
++
+diff -up cups-1.4.2/data/koi8-u.undo-str2537 cups-1.4.2/data/koi8-u
+--- cups-1.4.2/data/koi8-u.undo-str2537	2010-10-13 15:25:53.590863605 +0100
++++ cups-1.4.2/data/koi8-u	2010-10-13 15:25:53.590863605 +0100
+@@ -0,0 +1,259 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Ukrainian
++# Code Page KOI8-U text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020             
++21 0021             
++22 0022             
++23 0023             
++24 0024             
++25 0025             
++26 0026             
++27 0027             
++28 0028             
++29 0029             
++2A 002A             
++2B 002B             
++2C 002C             
++2D 002D             
++2E 002E             
++2F 002F             
++30 0030             
++31 0031             
++32 0032             
++33 0033             
++34 0034             
++35 0035             
++36 0036             
++37 0037             
++38 0038             
++39 0039             
++3A 003A             
++3B 003B             
++3C 003C             
++3D 003D             
++3E 003E             
++3F 003F             
++40 0040             
++41 0041             
++42 0042             
++43 0043             
++44 0044             
++45 0045             
++46 0046             
++47 0047             
++48 0048             
++49 0049             
++4A 004A             
++4B 004B             
++4C 004C             
++4D 004D             
++4E 004E             
++4F 004F             
++50 0050             
++51 0051             
++52 0052             
++53 0053             
++54 0054             
++55 0055             
++56 0056             
++57 0057             
++58 0058             
++59 0059             
++5A 005A             
++5B 005B             
++5C 005C             
++5D 005D             
++5E 005E             
++5F 005F             
++60 0060             
++61 0061             
++62 0062             
++63 0063             
++64 0064             
++65 0065             
++66 0066             
++67 0067             
++68 0068             
++69 0069             
++6A 006A             
++6B 006B             
++6C 006C             
++6D 006D             
++6E 006E             
++6F 006F             
++70 0070             
++71 0071             
++72 0072             
++73 0073             
++74 0074             
++75 0075             
++76 0076             
++77 0077             
++78 0078             
++79 0079             
++7A 007A             
++7B 007B             
++7C 007C             
++7D 007D             
++7E 007E             
++7F 007F             
++80 2500             
++81 2502             
++82 250C             
++83 2510             
++84 2514             
++85 2518             
++86 251C             
++87 2524             
++88 252C             
++89 2534             
++8A 253C             
++8B 2580             
++8C 2584             
++8D 2588             
++8E 258C             
++8F 2590             
++90 2591             
++91 2592             
++92 2593             
++93 2320             
++94 25A0             
++95 2219             
++96 221A             
++97 2248             
++98 2264             
++99 2265             
++9A 00A0             
++9B 2321             
++9C 00B0             
++9D 00B2             
++9E 00B7             
++9F 00F7             
++A0 2550             
++A1 2551             
++A2 2552             
++A3 0451             
++A4 0454             
++A5 2554             
++A6 0456             
++A7 0457             
++A8 2557             
++A9 2558             
++AA 2559             
++AB 255A             
++AC 255B             
++AD 0491             
++AE 255D             
++AF 255E             
++B0 255F             
++B1 2560             
++B2 2561             
++B3 0401             
++B4 0404             
++B5 2563             
++B6 0406             
++B7 0407             
++B8 2566             
++B9 2567             
++BA 2568             
++BB 2569             
++BC 256A             
++BD 0490             
++BE 256C             
++BF 00A9             
++C0 044E             
++C1 0430             
++C2 0431             
++C3 0446             
++C4 0434             
++C5 0435             
++C6 0444             
++C7 0433             
++C8 0445             
++C9 0438             
++CA 0439             
++CB 043A             
++CC 043B             
++CD 043C             
++CE 043D             
++CF 043E             
++D0 043F             
++D1 044F             
++D2 0440             
++D3 0441             
++D4 0442             
++D5 0443             
++D6 0436             
++D7 0432             
++D8 044C             
++D9 044B             
++DA 0437             
++DB 0448             
++DC 044D             
++DD 0449             
++DE 0447             
++DF 044A             
++E0 042E             
++E1 0410             
++E2 0411             
++E3 0426             
++E4 0414             
++E5 0415             
++E6 0424             
++E7 0413             
++E8 0425             
++E9 0418             
++EA 0419             
++EB 041A             
++EC 041B             
++ED 041C             
++EE 041D             
++EF 041E             
++F0 041F             
++F1 042F             
++F2 0420             
++F3 0421             
++F4 0422             
++F5 0423             
++F6 0416             
++F7 0412             
++F8 042C             
++F9 042B             
++FA 0417             
++FB 0428             
++FC 042D             
++FD 0429             
++FE 0427             
++FF 042A             
+diff -up cups-1.4.2/data/Makefile.undo-str2537 cups-1.4.2/data/Makefile
+--- cups-1.4.2/data/Makefile.undo-str2537	2010-10-13 15:25:36.655862915 +0100
++++ cups-1.4.2/data/Makefile	2010-10-13 15:25:53.573862824 +0100
+@@ -71,6 +71,31 @@ CHARMAPS =	\
+ 		windows-950.txt
+ 
+ CHARSETS =	\
++		windows-874 \
++		windows-1250 \
++		windows-1251 \
++		windows-1252 \
++		windows-1253 \
++		windows-1254 \
++		windows-1255 \
++		windows-1256 \
++		windows-1257 \
++		windows-1258 \
++		koi8-r \
++		koi8-u \
++		iso-8859-1 \
++		iso-8859-2 \
++		iso-8859-3 \
++		iso-8859-4 \
++		iso-8859-5 \
++		iso-8859-6 \
++		iso-8859-7 \
++		iso-8859-8 \
++		iso-8859-9 \
++		iso-8859-10 \
++		iso-8859-13 \
++		iso-8859-14 \
++		iso-8859-15 \
+ 		utf-8
+ 
+ DATAFILES =	\
+diff -up cups-1.4.2/data/windows-1250.undo-str2537 cups-1.4.2/data/windows-1250
+--- cups-1.4.2/data/windows-1250.undo-str2537	2010-10-13 15:25:53.577863286 +0100
++++ cups-1.4.2/data/windows-1250	2010-10-13 15:25:53.577863286 +0100
+@@ -0,0 +1,254 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1250 (WinLatin2) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++84 201E
++85 2026
++86 2020
++87 2021
++89 2030
++8A 0160
++8B 2039
++8C 015A
++8D 0164
++8E 017D
++8F 0179
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++99 2122
++9A 0161
++9B 203A
++9C 015B
++9D 0165
++9E 017E
++9F 017A
++A0 00A0
++A1 02C7
++A2 02D8
++A3 0141
++A4 00A4
++A5 0104
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 015E
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 017B
++B0 00B0
++B1 00B1
++B2 02DB
++B3 0142
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 0105
++BA 015F
++BB 00BB
++BC 013D
++BD 02DD
++BE 013E
++BF 017C
++C0 0154
++C1 00C1
++C2 00C2
++C3 0102
++C4 00C4
++C5 0139
++C6 0106
++C7 00C7
++C8 010C
++C9 00C9
++CA 0118
++CB 00CB
++CC 011A
++CD 00CD
++CE 00CE
++CF 010E
++D0 0110
++D1 0143
++D2 0147
++D3 00D3
++D4 00D4
++D5 0150
++D6 00D6
++D7 00D7
++D8 0158
++D9 016E
++DA 00DA
++DB 0170
++DC 00DC
++DD 00DD
++DE 0162
++DF 00DF
++E0 0155
++E1 00E1
++E2 00E2
++E3 0103
++E4 00E4
++E5 013A
++E6 0107
++E7 00E7
++E8 010D
++E9 00E9
++EA 0119
++EB 00EB
++EC 011B
++ED 00ED
++EE 00EE
++EF 010F
++F0 0111
++F1 0144
++F2 0148
++F3 00F3
++F4 00F4
++F5 0151
++F6 00F6
++F7 00F7
++F8 0159
++F9 016F
++FA 00FA
++FB 0171
++FC 00FC
++FD 00FD
++FE 0163
++FF 02D9
+diff -up cups-1.4.2/data/windows-1251.undo-str2537 cups-1.4.2/data/windows-1251
+--- cups-1.4.2/data/windows-1251.undo-str2537	2010-10-13 15:25:53.577863286 +0100
++++ cups-1.4.2/data/windows-1251	2010-10-13 15:25:53.577863286 +0100
+@@ -0,0 +1,258 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1251 (WinCyrillic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 0402
++81 0403
++82 201A
++83 0453
++84 201E
++85 2026
++86 2020
++87 2021
++88 20AC
++89 2030
++8A 0409
++8B 2039
++8C 040A
++8D 040C
++8E 040B
++8F 040F
++90 0452
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++99 2122
++9A 0459
++9B 203A
++9C 045A
++9D 045C
++9E 045B
++9F 045F
++A0 00A0
++A1 040E
++A2 045E
++A3 0408
++A4 00A4
++A5 0490
++A6 00A6
++A7 00A7
++A8 0401
++A9 00A9
++AA 0404
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 0407
++B0 00B0
++B1 00B1
++B2 0406
++B3 0456
++B4 0491
++B5 00B5
++B6 00B6
++B7 00B7
++B8 0451
++B9 2116
++BA 0454
++BB 00BB
++BC 0458
++BD 0405
++BE 0455
++BF 0457
++C0 0410
++C1 0411
++C2 0412
++C3 0413
++C4 0414
++C5 0415
++C6 0416
++C7 0417
++C8 0418
++C9 0419
++CA 041A
++CB 041B
++CC 041C
++CD 041D
++CE 041E
++CF 041F
++D0 0420
++D1 0421
++D2 0422
++D3 0423
++D4 0424
++D5 0425
++D6 0426
++D7 0427
++D8 0428
++D9 0429
++DA 042A
++DB 042B
++DC 042C
++DD 042D
++DE 042E
++DF 042F
++E0 0430
++E1 0431
++E2 0432
++E3 0433
++E4 0434
++E5 0435
++E6 0436
++E7 0437
++E8 0438
++E9 0439
++EA 043A
++EB 043B
++EC 043C
++ED 043D
++EE 043E
++EF 043F
++F0 0440
++F1 0441
++F2 0442
++F3 0443
++F4 0444
++F5 0445
++F6 0446
++F7 0447
++F8 0448
++F9 0449
++FA 044A
++FB 044B
++FC 044C
++FD 044D
++FE 044E
++FF 044F
+diff -up cups-1.4.2/data/windows-1252.undo-str2537 cups-1.4.2/data/windows-1252
+--- cups-1.4.2/data/windows-1252.undo-str2537	2010-10-13 15:25:53.578863623 +0100
++++ cups-1.4.2/data/windows-1252	2010-10-13 15:25:53.578863623 +0100
+@@ -0,0 +1,254 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1252 (WinLatin1) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++8E 017D
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9E 017E
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00BA
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 00D0
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 00DD
++DE 00DE
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 00F0
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 00FD
++FE 00FE
++FF 00FF
+diff -up cups-1.4.2/data/windows-1253.undo-str2537 cups-1.4.2/data/windows-1253
+--- cups-1.4.2/data/windows-1253.undo-str2537	2010-10-13 15:25:53.579863304 +0100
++++ cups-1.4.2/data/windows-1253	2010-10-13 15:25:53.579863304 +0100
+@@ -0,0 +1,243 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1253 (WinGreek) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 9f ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++a0 ff ltor single Symbol
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++89 2030
++8B 2039
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++99 2122
++9B 203A
++A0 00A0
++A1 0385
++A2 0386
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 2015
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 0384
++B5 00B5
++B6 00B6
++B7 00B7
++B8 0388
++B9 0389
++BA 038A
++BB 00BB
++BC 038C
++BD 00BD
++BE 038E
++BF 038F
++C0 0390
++C1 0391
++C2 0392
++C3 0393
++C4 0394
++C5 0395
++C6 0396
++C7 0397
++C8 0398
++C9 0399
++CA 039A
++CB 039B
++CC 039C
++CD 039D
++CE 039E
++CF 039F
++D0 03A0
++D1 03A1
++D3 03A3
++D4 03A4
++D5 03A5
++D6 03A6
++D7 03A7
++D8 03A8
++D9 03A9
++DA 03AA
++DB 03AB
++DC 03AC
++DD 03AD
++DE 03AE
++DF 03AF
++E0 03B0
++E1 03B1
++E2 03B2
++E3 03B3
++E4 03B4
++E5 03B5
++E6 03B6
++E7 03B7
++E8 03B8
++E9 03B9
++EA 03BA
++EB 03BB
++EC 03BC
++ED 03BD
++EE 03BE
++EF 03BF
++F0 03C0
++F1 03C1
++F2 03C2
++F3 03C3
++F4 03C4
++F5 03C5
++F6 03C6
++F7 03C7
++F8 03C8
++F9 03C9
++FA 03CA
++FB 03CB
++FC 03CC
++FD 03CD
++FE 03CE
+diff -up cups-1.4.2/data/windows-1254.undo-str2537 cups-1.4.2/data/windows-1254
+--- cups-1.4.2/data/windows-1254.undo-str2537	2010-10-13 15:25:53.579863304 +0100
++++ cups-1.4.2/data/windows-1254	2010-10-13 15:25:53.579863304 +0100
+@@ -0,0 +1,252 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1254 (WinTurkish) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0160
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9A 0161
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00BA
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 00C3
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 00CC
++CD 00CD
++CE 00CE
++CF 00CF
++D0 011E
++D1 00D1
++D2 00D2
++D3 00D3
++D4 00D4
++D5 00D5
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 0130
++DE 015E
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 00E3
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 00EC
++ED 00ED
++EE 00EE
++EF 00EF
++F0 011F
++F1 00F1
++F2 00F2
++F3 00F3
++F4 00F4
++F5 00F5
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 0131
++FE 015F
++FF 00FF
+diff -up cups-1.4.2/data/windows-1255.undo-str2537 cups-1.4.2/data/windows-1255
+--- cups-1.4.2/data/windows-1255.undo-str2537	2010-10-13 15:25:53.580863746 +0100
++++ cups-1.4.2/data/windows-1255	2010-10-13 15:25:53.580863746 +0100
+@@ -0,0 +1,236 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1255 (WinHebrew) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff rtol single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8B 2039
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9B 203A
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 20AA
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00D7
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00F7
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 05B0
++C1 05B1
++C2 05B2
++C3 05B3
++C4 05B4
++C5 05B5
++C6 05B6
++C7 05B7
++C8 05B8
++C9 05B9
++CB 05BB
++CC 05BC
++CD 05BD
++CE 05BE
++CF 05BF
++D0 05C0
++D1 05C1
++D2 05C2
++D3 05C3
++D4 05F0
++D5 05F1
++D6 05F2
++D7 05F3
++D8 05F4
++E0 05D0
++E1 05D1
++E2 05D2
++E3 05D3
++E4 05D4
++E5 05D5
++E6 05D6
++E7 05D7
++E8 05D8
++E9 05D9
++EA 05DA
++EB 05DB
++EC 05DC
++ED 05DD
++EE 05DE
++EF 05DF
++F0 05E0
++F1 05E1
++F2 05E2
++F3 05E3
++F4 05E4
++F5 05E5
++F6 05E6
++F7 05E7
++F8 05E8
++F9 05E9
++FA 05EA
++FD 200E
++FE 200F
+diff -up cups-1.4.2/data/windows-1256.undo-str2537 cups-1.4.2/data/windows-1256
+--- cups-1.4.2/data/windows-1256.undo-str2537	2010-10-13 15:25:53.581863452 +0100
++++ cups-1.4.2/data/windows-1256	2010-10-13 15:25:53.581863452 +0100
+@@ -0,0 +1,259 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1256 (WinArabic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff rtol single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++81 067E
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8A 0679
++8B 2039
++8C 0152
++8D 0686
++8E 0698
++8F 0688
++90 06AF
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 06A9
++99 2122
++9A 0691
++9B 203A
++9C 0153
++9D 200C
++9E 200D
++9F 06BA
++A0 00A0
++A1 060C
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 06BE
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 061B
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 061F
++C0 06C1
++C1 0621
++C2 0622
++C3 0623
++C4 0624
++C5 0625
++C6 0626
++C7 0627
++C8 0628
++C9 0629
++CA 062A
++CB 062B
++CC 062C
++CD 062D
++CE 062E
++CF 062F
++D0 0630
++D1 0631
++D2 0632
++D3 0633
++D4 0634
++D5 0635
++D6 0636
++D7 00D7
++D8 0637
++D9 0638
++DA 0639
++DB 063A
++DC 0640
++DD 0641
++DE 0642
++DF 0643
++E0 00E0
++E1 0644
++E2 00E2
++E3 0645
++E4 0646
++E5 0647
++E6 0648
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 0649
++ED 064A
++EE 00EE
++EF 00EF
++F0 064B
++F1 064C
++F2 064D
++F3 064E
++F4 00F4
++F5 064F
++F6 0650
++F7 00F7
++F8 0651
++F9 00F9
++FA 0652
++FB 00FB
++FC 00FC
++FD 200E
++FE 200F
++FF 06D2
+diff -up cups-1.4.2/data/windows-1257.undo-str2537 cups-1.4.2/data/windows-1257
+--- cups-1.4.2/data/windows-1257.undo-str2537	2010-10-13 15:25:53.581863452 +0100
++++ cups-1.4.2/data/windows-1257	2010-10-13 15:25:53.582863247 +0100
+@@ -0,0 +1,247 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1257 (WinBaltic) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++84 201E
++85 2026
++86 2020
++87 2021
++89 2030
++8B 2039
++8D 00A8
++8E 02C7
++8F 00B8
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++99 2122
++9B 203A
++9D 00AF
++9E 02DB
++A0 00A0
++A2 00A2
++A3 00A3
++A4 00A4
++A6 00A6
++A7 00A7
++A8 00D8
++A9 00A9
++AA 0156
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00C6
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00F8
++B9 00B9
++BA 0157
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00E6
++C0 0104
++C1 012E
++C2 0100
++C3 0106
++C4 00C4
++C5 00C5
++C6 0118
++C7 0112
++C8 010C
++C9 00C9
++CA 0179
++CB 0116
++CC 0122
++CD 0136
++CE 012A
++CF 013B
++D0 0160
++D1 0143
++D2 0145
++D3 00D3
++D4 014C
++D5 00D5
++D6 00D6
++D7 00D7
++D8 0172
++D9 0141
++DA 015A
++DB 016A
++DC 00DC
++DD 017B
++DE 017D
++DF 00DF
++E0 0105
++E1 012F
++E2 0101
++E3 0107
++E4 00E4
++E5 00E5
++E6 0119
++E7 0113
++E8 010D
++E9 00E9
++EA 017A
++EB 0117
++EC 0123
++ED 0137
++EE 012B
++EF 013C
++F0 0161
++F1 0144
++F2 0146
++F3 00F3
++F4 014D
++F5 00F5
++F6 00F6
++F7 00F7
++F8 0173
++F9 0142
++FA 015B
++FB 016B
++FC 00FC
++FD 017C
++FE 017E
++FF 02D9
+diff -up cups-1.4.2/data/windows-1258.undo-str2537 cups-1.4.2/data/windows-1258
+--- cups-1.4.2/data/windows-1258.undo-str2537	2010-10-13 15:25:53.582863247 +0100
++++ cups-1.4.2/data/windows-1258	2010-10-13 15:25:53.582863247 +0100
+@@ -0,0 +1,250 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 1258 (WinVietnamese) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++82 201A
++83 0192
++84 201E
++85 2026
++86 2020
++87 2021
++88 02C6
++89 2030
++8B 2039
++8C 0152
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++98 02DC
++99 2122
++9B 203A
++9C 0153
++9F 0178
++A0 00A0
++A1 00A1
++A2 00A2
++A3 00A3
++A4 00A4
++A5 00A5
++A6 00A6
++A7 00A7
++A8 00A8
++A9 00A9
++AA 00AA
++AB 00AB
++AC 00AC
++AD 00AD
++AE 00AE
++AF 00AF
++B0 00B0
++B1 00B1
++B2 00B2
++B3 00B3
++B4 00B4
++B5 00B5
++B6 00B6
++B7 00B7
++B8 00B8
++B9 00B9
++BA 00BA
++BB 00BB
++BC 00BC
++BD 00BD
++BE 00BE
++BF 00BF
++C0 00C0
++C1 00C1
++C2 00C2
++C3 0102
++C4 00C4
++C5 00C5
++C6 00C6
++C7 00C7
++C8 00C8
++C9 00C9
++CA 00CA
++CB 00CB
++CC 0300
++CD 00CD
++CE 00CE
++CF 00CF
++D0 0110
++D1 00D1
++D2 0309
++D3 00D3
++D4 00D4
++D5 01A0
++D6 00D6
++D7 00D7
++D8 00D8
++D9 00D9
++DA 00DA
++DB 00DB
++DC 00DC
++DD 01AF
++DE 0303
++DF 00DF
++E0 00E0
++E1 00E1
++E2 00E2
++E3 0103
++E4 00E4
++E5 00E5
++E6 00E6
++E7 00E7
++E8 00E8
++E9 00E9
++EA 00EA
++EB 00EB
++EC 0301
++ED 00ED
++EE 00EE
++EF 00EF
++F0 0111
++F1 00F1
++F2 0323
++F3 00F3
++F4 00F4
++F5 01A1
++F6 00F6
++F7 00F7
++F8 00F8
++F9 00F9
++FA 00FA
++FB 00FB
++FC 00FC
++FD 01B0
++FE 20AB
++FF 00FF
+diff -up cups-1.4.2/data/windows-874.undo-str2537 cups-1.4.2/data/windows-874
+--- cups-1.4.2/data/windows-874.undo-str2537	2010-10-13 15:25:53.572863448 +0100
++++ cups-1.4.2/data/windows-874	2010-10-13 15:25:53.572863448 +0100
+@@ -0,0 +1,228 @@
++charset 8bit
++
++#
++# This file defines the font and character mappings used for Windows
++# Code Page 874 (Thai) text printing.
++#
++# The first line consists of:
++#
++#   direction width normal bold italic bold-italic
++#
++# Direction is the string "ltor" or "rtol", indicating left-to-right or
++# right-to-left text.
++#
++# Width is the string "single" or "double"; double means that the glyphs
++# are twice as wide as ASCII characters in the Courier typeface.
++#
++# "Normal", "bold", "italic", and "bold-italic" are the typefaces to use
++# for each presentation.  If characters are only available in a single
++# style then only one typeface should be listed (e.g. "Symbol")
++#
++# Each font that is listed will be used (and downloaded if needed) when
++# printing.
++#
++
++00 ff ltor single Courier Courier-Bold Courier-Italic Courier-BoldItalic
++
++#
++# The following lines define the mapping from the 8-bit character set to
++# the Unicode glyphs for each character:
++#
++#   char glyph
++#
++# "Char" and "glyph" are hexadecimal values.
++#
++
++20 0020
++21 0021
++22 0022
++23 0023
++24 0024
++25 0025
++26 0026
++27 0027
++28 0028
++29 0029
++2A 002A
++2B 002B
++2C 002C
++2D 002D
++2E 002E
++2F 002F
++30 0030
++31 0031
++32 0032
++33 0033
++34 0034
++35 0035
++36 0036
++37 0037
++38 0038
++39 0039
++3A 003A
++3B 003B
++3C 003C
++3D 003D
++3E 003E
++3F 003F
++40 0040
++41 0041
++42 0042
++43 0043
++44 0044
++45 0045
++46 0046
++47 0047
++48 0048
++49 0049
++4A 004A
++4B 004B
++4C 004C
++4D 004D
++4E 004E
++4F 004F
++50 0050
++51 0051
++52 0052
++53 0053
++54 0054
++55 0055
++56 0056
++57 0057
++58 0058
++59 0059
++5A 005A
++5B 005B
++5C 005C
++5D 005D
++5E 005E
++5F 005F
++60 0060
++61 0061
++62 0062
++63 0063
++64 0064
++65 0065
++66 0066
++67 0067
++68 0068
++69 0069
++6A 006A
++6B 006B
++6C 006C
++6D 006D
++6E 006E
++6F 006F
++70 0070
++71 0071
++72 0072
++73 0073
++74 0074
++75 0075
++76 0076
++77 0077
++78 0078
++79 0079
++7A 007A
++7B 007B
++7C 007C
++7D 007D
++7E 007E
++7F 007F
++80 20AC
++85 2026
++91 2018
++92 2019
++93 201C
++94 201D
++95 2022
++96 2013
++97 2014
++A0 00A0
++A1 0E01
++A2 0E02
++A3 0E03
++A4 0E04
++A5 0E05
++A6 0E06
++A7 0E07
++A8 0E08
++A9 0E09
++AA 0E0A
++AB 0E0B
++AC 0E0C
++AD 0E0D
++AE 0E0E
++AF 0E0F
++B0 0E10
++B1 0E11
++B2 0E12
++B3 0E13
++B4 0E14
++B5 0E15
++B6 0E16
++B7 0E17
++B8 0E18
++B9 0E19
++BA 0E1A
++BB 0E1B
++BC 0E1C
++BD 0E1D
++BE 0E1E
++BF 0E1F
++C0 0E20
++C1 0E21
++C2 0E22
++C3 0E23
++C4 0E24
++C5 0E25
++C6 0E26
++C7 0E27
++C8 0E28
++C9 0E29
++CA 0E2A
++CB 0E2B
++CC 0E2C
++CD 0E2D
++CE 0E2E
++CF 0E2F
++D0 0E30
++D1 0E31
++D2 0E32
++D3 0E33
++D4 0E34
++D5 0E35
++D6 0E36
++D7 0E37
++D8 0E38
++D9 0E39
++DA 0E3A
++DF 0E3F
++E0 0E40
++E1 0E41
++E2 0E42
++E3 0E43
++E4 0E44
++E5 0E45
++E6 0E46
++E7 0E47
++E8 0E48
++E9 0E49
++EA 0E4A
++EB 0E4B
++EC 0E4C
++ED 0E4D
++EE 0E4E
++EF 0E4F
++F0 0E50
++F1 0E51
++F2 0E52
++F3 0E53
++F4 0E54
++F5 0E55
++F6 0E56
++F7 0E57
++F8 0E58
++F9 0E59
++FA 0E5A
++FB 0E5B
+diff -up cups-1.4.2/packaging/cups.list.in.undo-str2537 cups-1.4.2/packaging/cups.list.in
+--- cups-1.4.2/packaging/cups.list.in.undo-str2537	2009-07-07 17:52:34.000000000 +0100
++++ cups-1.4.2/packaging/cups.list.in	2010-10-13 15:26:27.715988304 +0100
+@@ -500,6 +500,29 @@ d 0755 root sys $DATADIR/charmaps -
+ f 0444 root sys $DATADIR/charmaps data/*.txt
+ 
+ d 0755 root sys $DATADIR/charsets -
++f 0644 root sys $DATADIR/charsets/windows-874 data/windows-874
++f 0644 root sys $DATADIR/charsets/windows-1250 data/windows-1250
++f 0644 root sys $DATADIR/charsets/windows-1251 data/windows-1251
++f 0644 root sys $DATADIR/charsets/windows-1252 data/windows-1252
++f 0644 root sys $DATADIR/charsets/windows-1253 data/windows-1253
++f 0644 root sys $DATADIR/charsets/windows-1254 data/windows-1254
++f 0644 root sys $DATADIR/charsets/windows-1255 data/windows-1255
++f 0644 root sys $DATADIR/charsets/windows-1256 data/windows-1256
++f 0644 root sys $DATADIR/charsets/windows-1257 data/windows-1257
++f 0644 root sys $DATADIR/charsets/windows-1258 data/windows-1258
++f 0644 root sys $DATADIR/charsets/iso-8859-1 data/iso-8859-1
++f 0644 root sys $DATADIR/charsets/iso-8859-2 data/iso-8859-2
++f 0644 root sys $DATADIR/charsets/iso-8859-3 data/iso-8859-3
++f 0644 root sys $DATADIR/charsets/iso-8859-4 data/iso-8859-4
++f 0644 root sys $DATADIR/charsets/iso-8859-5 data/iso-8859-5
++f 0644 root sys $DATADIR/charsets/iso-8859-6 data/iso-8859-6
++f 0644 root sys $DATADIR/charsets/iso-8859-7 data/iso-8859-7
++f 0644 root sys $DATADIR/charsets/iso-8859-8 data/iso-8859-8
++f 0644 root sys $DATADIR/charsets/iso-8859-9 data/iso-8859-9
++f 0644 root sys $DATADIR/charsets/iso-8859-10 data/iso-8859-10
++f 0644 root sys $DATADIR/charsets/iso-8859-13 data/iso-8859-13
++f 0644 root sys $DATADIR/charsets/iso-8859-14 data/iso-8859-14
++f 0644 root sys $DATADIR/charsets/iso-8859-15 data/iso-8859-15
+ f 0444 root sys $DATADIR/charsets/utf-8 data/utf-8
+ 
+ d 0755 root sys $DATADIR/data -
+diff -up cups-1.4.2/scheduler/ipp.c.undo-str2537 cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.undo-str2537	2010-10-13 15:25:36.689988001 +0100
++++ cups-1.4.2/scheduler/ipp.c	2010-10-13 15:25:53.604862944 +0100
+@@ -415,31 +415,13 @@ cupsdProcessIPPRequest(
+ 	ippAddString(con->response, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE,
+                      "attributes-natural-language", NULL, DefaultLanguage);
+ 
+-      if (charset &&
+-          strcasecmp(charset->values[0].string.text, "us-ascii") &&
+-          strcasecmp(charset->values[0].string.text, "utf-8"))
+-      {
+-       /*
+-        * Bad character set...
+-	*/
+-
+-        cupsdLogMessage(CUPSD_LOG_ERROR, "Unsupported character set \"%s\"!",
+-	                charset->values[0].string.text);
+-	cupsdAddEvent(CUPSD_EVENT_SERVER_AUDIT, NULL, NULL,
+-		      "%04X %s Unsupported attributes-charset value \"%s\"",
+-		      IPP_CHARSET, con->http.hostname,
+-		      charset->values[0].string.text);
+-	send_ipp_status(con, IPP_BAD_REQUEST,
+-	                _("Unsupported character set \"%s\"!"),
+-	                charset->values[0].string.text);
+-      }
+-      else if (!charset || !language ||
+-	       (!uri &&
+-	        con->request->request.op.operation_id != CUPS_GET_DEFAULT &&
+-	        con->request->request.op.operation_id != CUPS_GET_PRINTERS &&
+-	        con->request->request.op.operation_id != CUPS_GET_CLASSES &&
+-	        con->request->request.op.operation_id != CUPS_GET_DEVICES &&
+-	        con->request->request.op.operation_id != CUPS_GET_PPDS))
++      if (!charset || !language ||
++	  (!uri &&
++	   con->request->request.op.operation_id != CUPS_GET_DEFAULT &&
++	   con->request->request.op.operation_id != CUPS_GET_PRINTERS &&
++	   con->request->request.op.operation_id != CUPS_GET_CLASSES &&
++	   con->request->request.op.operation_id != CUPS_GET_DEVICES &&
++	   con->request->request.op.operation_id != CUPS_GET_PPDS))
+       {
+        /*
+ 	* Return an error, since attributes-charset,
+@@ -493,6 +475,14 @@ cupsdProcessIPPRequest(
+       }
+       else
+       {
++	if (strcasecmp (charset->values[0].string.text, "us-ascii") &&
++	    strcasecmp (charset->values[0].string.text, "utf-8"))
++	  cupsdLogMessage(CUPSD_LOG_ERROR, "Unsupported character set \"%s\" "
++			  "from host %s! "
++			  "Clients must use us-ascii or utf-8.  Future "
++			  "versions will reject this request.",
++			  charset->values[0].string.text, con->http.hostname);
++
+        /*
+ 	* OK, all the checks pass so far; make sure requesting-user-name is
+ 	* not "root" from a remote host...

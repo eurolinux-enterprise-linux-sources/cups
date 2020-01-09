@@ -1,0 +1,25 @@
+diff -up cups-1.4.2/scheduler/conf.c.str4591 cups-1.4.2/scheduler/conf.c
+--- cups-1.4.2/scheduler/conf.c.str4591	2015-03-04 13:56:54.282280765 +0000
++++ cups-1.4.2/scheduler/conf.c	2015-03-04 14:03:28.230838482 +0000
+@@ -1192,6 +1192,21 @@ cupsdReadConfiguration(void)
+                     BrowseTimeout);
+   }
+ 
++  /*
++   * Validate the default error policy...
++   */
++
++  if (strcmp(ErrorPolicy, "retry-current-job") &&
++      strcmp(ErrorPolicy, "abort-job") &&
++      strcmp(ErrorPolicy, "retry-job") &&
++      strcmp(ErrorPolicy, "stop-printer")) {
++    cupsdLogMessage(CUPSD_LOG_ALERT, "Invalid ErrorPolicy %s!",
++		    ErrorPolicy);
++    cupsdSetString(&ErrorPolicy, "stop-printer");
++    cupsdLogMessage(CUPSD_LOG_ALERT, "Reset ErrorPolicy to %s!",
++		    ErrorPolicy);
++  }
++
+  /*
+   * Update the default policy, as needed...
+   */

@@ -1,0 +1,16 @@
+diff -up cups-1.4.2/scheduler/job.c.str4742 cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.str4742	2016-01-12 15:49:20.142133728 +0100
++++ cups-1.4.2/scheduler/job.c	2016-01-12 15:49:20.187133684 +0100
+@@ -2590,7 +2590,11 @@ cupsdUnloadCompletedJobs(void)
+       if (job->dirty)
+         cupsdSaveJob(job);
+ 
+-      unload_job(job);
++      /* 
++       * Don't unload jobs that couldn't be saved (i.e. still dirty)
++       */
++      if ( !job->dirty )
++        unload_job(job);
+     }
+ }
+ 

@@ -1,0 +1,12 @@
+diff -up cups-1.4.2/man/lp.man.orientreq cups-1.4.2/man/lp.man
+--- cups-1.4.2/man/lp.man.orientreq	2016-11-01 16:55:03.309559742 +0100
++++ cups-1.4.2/man/lp.man	2016-11-01 18:26:39.635248055 +0100
+@@ -172,7 +172,7 @@ the size names "a4", "letter", and "lega
+ .TP 5
+ -o orientation-requested=4
+ .br
+-Prints the job in landscape (rotated 90 degrees).
++Prints the job in landscape (rotated 90 degrees). Option '-o orientation-requested=6' (rotated 180 degrees) does not work.
+ .TP 5
+ -o sides=one-sided
+ .TP 5

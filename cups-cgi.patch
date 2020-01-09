@@ -1,0 +1,17 @@
+diff -up cups-1.4.2/scheduler/client.c.cgi cups-1.4.2/scheduler/client.c
+--- cups-1.4.2/scheduler/client.c.cgi	2014-08-01 14:08:09.149273138 +0100
++++ cups-1.4.2/scheduler/client.c	2014-08-01 14:08:09.151273148 +0100
+@@ -4491,12 +4491,7 @@ pipe_command(cupsd_client_t *con,	/* I -
+   argv[0] = command;
+ 
+   if (options)
+-  {
+-    commptr = options;
+-    if (*commptr == ' ')
+-      commptr ++;
+-    strlcpy(argbuf, commptr, sizeof(argbuf));
+-  }
++    strlcpy(argbuf, options, sizeof(argbuf));
+   else
+     argbuf[0] = '\0';
+ 

@@ -1,0 +1,13 @@
+diff -up cups-1.4.2/systemv/lpstat.c.7620 cups-1.4.2/systemv/lpstat.c
+--- cups-1.4.2/systemv/lpstat.c.7620	2010-07-22 20:31:49.000000000 +0200
++++ cups-1.4.2/systemv/lpstat.c	2010-07-22 20:34:05.000000000 +0200
+@@ -1536,7 +1536,8 @@ show_printers(const char  *printers,	/* 
+ 		};
+   static const char *jattrs[] =		/* Attributes we need for jobs... */
+ 		{
+-		  "job-id"
++		  "job-id",
++		  "job-state"
+ 		};
+ 
+ 
